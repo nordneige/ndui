@@ -1,0 +1,21 @@
+﻿errorMessage = {
+    required: '必填选项！',
+    number: '必需为有效数字！',
+    decimal: '必需为有效数值类型！',
+    chinese: '应输入有效的汉字！',
+    email: '不是有效的邮件地址！',
+    mobile: '不是有效的手机格式！',
+    telephone: '固定电话格式错误！',
+    QQ: '不是有效的QQ格式！',
+    idcard: '身份证号码无效！',
+    ip: '不是有效的IP地址！',
+    url: '网络地址格式错误！',
+    quote: '不可包含特殊字符！',
+    date: '不是有效的日期！',
+    int: '请输入整形数据',
+    maxlength: '最大长度不能超过{0}！',
+    minlength: '最小长度不能少于{0}！',
+    maxvalue: '最大值不能大于{0}！',
+    nofind:'数据不存在!',
+    minvalue: '最小值不能小于{0}！'
+}

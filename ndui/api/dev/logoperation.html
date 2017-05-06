@@ -1,0 +1,26 @@
+﻿<script>
+    app.set({ app: '系统管理', title: '操作日志' });
+    $nd.ndgrid('MyGrid', 'dbsqlx/operation?name=log_operation').bind({
+            columns: [
+                { "name": "id", "text": "id", "visble": false },
+                { "name": "user_ip", "text": "访问者IP", "visble": true },
+                { "name": "user_name", "text": "登录用户名", "visble": true },
+                { "name": "intime", "text": "请求时间", "visble": true },
+                { "name": "viewpath", "text": "请求路径", "visble": true },
+                { "name": "lookmethod", "text": "请求方法", "visble": true },
+                { "name": "userdata", "text": "请求数据", "visble": true }
+            ],
+            toolbar: [{ value: '导出', ngclick: function () { MyGrid.excel("数据.xlsx"); }, disabled: function () { return true; } }],
+            command: [{ cmd: '查看', ngclick: function (r) { MyGrid.showView(r); } }]
+    }).bindsearch(
+    [
+        { "name": "intime", "type": "datetime", "text": "请求时间 从", "value": "<%=@nd.day%>", nohisvalue: true },
+        { "name": "intimeend", "type": "datetime", "text": "到", "value": "" }],
+    [
+        { "name": "user_name", "type": "input", "text": "登录用户名", "value": "" },
+        { "name": "viewpath", "type": "input", "text": "请求路径", "value": "" },
+        { "name": "lookmethod", "type": "input", "text": "请求方法", "value": "" },
+        { "name": "userdata", "type": "input", "text": "请求数据", "value": "" }
+    ]).refresh();
+</script>
+

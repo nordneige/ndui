@@ -1,0 +1,246 @@
+﻿<script src="<%=@nd.Site.Url%>/ndui/lib/ueditor/ueditor.config.js"></script>
+<script src="<%=@nd.Site.Url%>/ndui/lib/ueditor/ueditor.all.min.js" charset="utf-8"></script>
+<script src="<%=@nd.Site.Url%>/ndui/lib/ueditor/lang/zh-cn/zh-cn.js"></script>
+<div id="TT"></div>
+<div id="MyGrid"></div>
+<div id="DemoFormBox" style="display:none">
+    <div id="DemoForm"></div>
+    <div>
+        <input class="btn btn-default" type="button" value="提交测试" onclick="showvalue()" />
+    </div>
+</div>
+
+
+<script>
+    var form = $nd.ndform('DemoForm').bind(
+        {
+         //   isonerow: true//合并一行显示 可选字段
+        }
+    ).setdata([
+       {
+           lsws: {
+               text: '输入框',//显示名称
+               name: 'input',//字段名称
+               cname: 'input',//控制ID 名称 可选组件
+               type: 'input',//控件类型
+               validate: 'decimal'//验收 为 字符串（如‘validate:'decimal|required'’）或 方法（如 ‘validate:function (m) {return '数据：'+m.value+'，不符合要求！';}’）
+           },
+           rsws: { text: '多行文本', name: 'textarea', type: 'textarea' }
+       },
+       {
+           lsws: { text: '数字', name: 'number', type: 'number', validate: 'number' },
+           rsws: { text: '多行文本', name: 'textarea', type: 'textarea' }
+       },
+       {
+           lsws: { text: '复选', name: 'checkbox', type: 'checkbox' },
+           rsws: {
+               text: '下拉', name: 'select', type: 'select',
+               //下拉数据
+               options: [{ text: '1', value: '1' }, { text: '2', value: '2' }], value: '2'
+           }
+       },
+        {
+            lsws: { text: 'spinner', name: 'spinner', type: 'spinner' },
+            //rsws: {
+            //    text: '多选下拉', name: 'multiselect', type: 'multiselect',
+            //    //下拉数据
+            //    options: [{ text: '1', value: '1' }, { text: '2', value: '2' }], value: '2'
+            //}
+        },
+       {
+           lsws: { text: '日期1', name: 'date', type: 'date', value: '2017-1-1' },
+           rsws: { text: '日期2', name: 'datetime', type: 'datetime' }
+       },
+       {
+           lsws: { text: '文本', name: 'label', type: 'label', value: '文本' },
+           rsws: {
+               text: '单选', name: 'radiolist', type: 'radiolist',
+               //单选数据集
+               data: [{ text: '男', value: '1' }, { text: '女', value: '2' }],
+               value: '2'
+           }
+       },
+       {
+           lsws: { text: '隐藏域', name: 'hidden', type: 'hidden', value: '121212' },
+           rsws: {
+               text: '复选组', name: 'checkboxlist', type: 'checkboxlist', split: ',',
+               //复选数据集
+               data: [{ text: '数据1', value: '1' }, { text: '数据2', value: '2' }, { text: '数据3', value: '2' }],
+               value: '2'
+           }
+       },
+       {
+           lsws: {
+               text: '自动表单', name: 'autocomplete', type: 'autocomplete',
+               //显示值
+               label: '',
+               //实际值
+               value: '',
+               validate: 'required',
+               //搜索数据后台接口
+               dbpath: 'dbsqlx/userandorg?name=GetUser'
+           },
+           rsws: {
+               text: '上传', name: 'upload', type: 'upload',
+               //文件ID
+               fid: $nd.guid(),
+               //上传到后台文件目录
+               key: 'Upload',
+               validate: function (m) {
+                   if (m.label && !m.label.endsWith('.txt')) {
+                       return '请上传 .txt 文件';
+                   }
+               }
+           }
+       },
+       {
+           lsws: {
+               text: '多选组件', name: 'magicSuggest', type: 'magicSuggest', value: 'XLS;TXT', validate: 'required',
+               data: ['GIF', 'JPG', 'PNG', 'BMP', 'RAR', 'DOC', 'XLS', 'TXT'], split: ';'
+           },
+           rsws: {
+               text: '金额', name: 'money', type: 'money', value: '11111111',
+               round: 3//保留小数 默认为 2
+           }
+       },
+       {
+           lsws: {
+               text: '金额组', name: 'rangemoney', type: 'rangemoney', value: '', validate: 'required'
+           },
+           rsws: {
+               text: '组织树', name: 'orgtree', type: 'orgtree', value: '', validate: 'required',
+               //后台数据接口
+               viewdbpath: 'dbsqlx/bm?name=GetOrganization',
+               //选中字段
+               select: 'Dpnum'
+           }
+       },
+       {
+           lsws: {
+               text: '人员选择', name: 'persontree', type: 'persontree', value: '', validate: 'required',
+               //组织机构后台数据接口
+               orgdbpath: 'dbsqlx/bm?name=GetOrganization',
+               select: 'EmployeeID',
+               //人员信息后台数据接口
+               dbpath: 'dbsqlx/userandorg?name=GetUser'
+           },
+           rsws: {
+               text: '选择列表', name: 'ndmodelgrid', type: 'ndmodelgrid', value: '', validate: 'required',
+               //显示列表
+               viewGrid: function () {
+                   //生成弹出框 ID为 ndmodelgridModel
+                   $nd.ndmodal('ndmodelgridModel').bind({
+                       width: '50%',
+                       height: '50%',
+                       includename: 'ndmodelgridMGrid',//内容 DIV ID为 ndmodelgridMGrid
+                       title: this.title ? this.title : '数据',
+                       //加载方法
+                       load: function () {
+                           $nd.ndgrid('ndmodelgridMGrid', 'dbsqlx/bm?name=List_TPersonDetail').bind({
+                               pagepaper: 5,
+                               rowSelected: true,
+                               height: ndmodelgridModel.getheight() - 230,
+                               aotoheight: false,//关闭自动高度计算
+                               //双击事件
+                               dblclick: function (v) {
+                                   DemoForm.getform('ndmodelgrid').label = v.UserName;
+                                   DemoForm.getform('ndmodelgrid').val(v.EmployeeID);
+                                   DemoForm.getform('ndmodelgrid').validatedone();
+                                   DemoForm.getform('ndmodelgrid').onchange();
+                                   ndmodelgridModel.hide();
+                               },
+                               columns: [
+                                   { name: "UserName", text: "姓名", visble: true },
+                                   { name: "OrganizationName", text: "部门科室", visble: true, showlength: 10 },
+                                   { name: "JobName", text: "岗位", visble: true, showlength: 10 },
+                                   { name: "LevelName", text: "等级", visble: true }
+                               ]
+                           }).bindsearch([
+                               { name: "Search", type: "input", text: "搜索", value: "" },
+                               { name: "OrganizationID", type: "hidden", text: "部门", value: "" }
+                           ]).refresh();
+                       },
+                       command: [{
+                           cmd: '确定', ngclick: function () {
+                               var v = ndmodelgridMGrid.selectedRow;
+                               DemoForm.getform('ndmodelgrid').label = v.UserName;
+                               DemoForm.getform('ndmodelgrid').val(v.EmployeeID);
+                               DemoForm.getform('ndmodelgrid').validatedone();
+                               DemoForm.getform('ndmodelgrid').onchange();
+                               ndmodelgridModel.hide();
+                           }
+                       }]
+                   }).show();
+               }
+           }
+       },
+       {
+           lsws: {
+               text: '日期组', name: 'rangetime', type: 'rangetime', value: '', validate: 'required',
+               //附加字段1
+               valueName1: 'StartDate',
+               //附加字段2
+               valueName2: 'EndDate'
+           },
+           rsws: { text: '数字组', name: 'rangenumber', type: 'rangenumber', value: '', validate: 'required' }
+       }
+       ,
+       {
+           lsws: { text: '在线编辑', name: 'ueditor', type: 'ueditor', value: '' }
+       }
+    ]);
+   form.print();
+    function showvalue() {
+        $('#TT').html($nd.json2Str(form.getdata()));
+        if (form.validate) {
+            alert('验证通过！');
+            $('#DemoFormBox').hide();
+            $('#MyGrid').show();
+        } else {
+            alert('验证无效！');
+        }
+    }
+</script>
+<script>
+    //设定 ID 和 对应后台数据接口
+    $nd.ndgrid('MyGrid', 'dbsqlx/bm?name=Factory').bind({
+        showcheckbox: false,//可选参数 是否显示复选框
+        showsearch: true,//可选参数 是否显示查询条件
+        height: 100,//可选参数 高度设置
+        multiped: true,//可选参数 是否多选
+        //列设定
+        columns: [
+            { name: "FactoryID", text: "FactoryID", visble: false },
+            { name: "FactoryCode", text: "工厂代码", visble: true },
+            { name: "FactoryName", text: "工厂名称", visble: true, showlength: 5 },
+            { name: "Visible", text: "Visible", visble: true },
+            { name: "CompanyCode", text: "公司代码", visble: true },
+            { name: "AppraisingRange", text: "AppraisingRange", visble: true },
+            { name: "LanguageCode", text: "语言", visble: true },
+            { name: "ShowOrder", text: "ShowOrder", visble: true }
+        ],
+        //功能设定
+        toolbar: [
+            { value: '导出', ngclick: function () { MyGrid.excel("数据.xlsx"); } },
+            {
+                value: '表单', ngclick: function () {
+                    $('#DemoFormBox').show();
+                    $('#MyGrid').hide();
+                }
+            }
+        ],
+        //行命令
+        command: [{
+            cmd: '查看', ngclick: function (r) {
+                return MyGrid.showView(r);
+            }
+        }]
+    })
+        //搜索条件
+        .bindsearch([
+        { name: "FactoryCode", "type": "input", text: "工厂代码", "value": "" },
+        { name: "FactoryName", "type": "input", text: "工厂名称", "value": "" }
+        ], [{ name: "CompanyCode", "type": "input", text: "公司代码", "value": "" }])
+        //刷新并显示
+        .refresh();
+</script>

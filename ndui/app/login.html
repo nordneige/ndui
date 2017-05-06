@@ -1,0 +1,64 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title><%=@nd.Site.WebName%></title>
+    <link href="<%=@nd.Site.Url%>/app/css/style.css" rel="stylesheet" type="text/css" />
+    <script language="JavaScript" src="<%=@nd.Site.Url%>/app/js/jquery.js"></script>
+    <script src="<%=@nd.Site.Url%>/app/js/cloud.js" type="text/javascript"></script>
+    <script src="<%=@nd.Site.Url%>/ndui/lib/nord.axd"></script>
+
+    <script language="javascript">
+        $(function () {
+            $('.loginbox').css({ 'position': 'absolute', 'left': ($(window).width() - 692) / 2 });
+            $(window).resize(function () {
+                $('.loginbox').css({ 'position': 'absolute', 'left': ($(window).width() - 692) / 2 });
+            })
+        });
+
+        function loginClick() {
+            NduiApi.Web.Api.UserHanders.Login([$('#username').val(), $('#password').val()], function (r) {
+                if (r.success) {
+                    if (window.location.pathname.toLowerCase().indexOf('login') > -1) {
+                        if ($nd.que("u")) {
+                            document.location = $nd.que("u");
+                        } else {
+                            document.location = "<%=@nd.Site.Url%>";
+                        }
+                    } else {
+                    }
+                } else {
+                    alert(r.message);
+                }
+            });
+        }
+    </script>
+
+</head>
+
+<body style="background-color:#1c77ac; background-image:url(images/light.png); background-repeat:no-repeat; background-position:center top; overflow:hidden;">
+    <div id="mainBody">
+        <div id="cloud1" class="cloud"></div>
+        <div id="cloud2" class="cloud"></div>
+    </div>
+    <div class="loginbody">
+        <span class="systemlogo"><%=@nd.Site.WebName%> </span>
+        <div class="loginbox">
+            <ul>
+                <li><input name="" id="username" type="text" class="loginuser" value="admin" /></li>
+                <li><input name="" id="password" type="text" class="loginpwd" value="" placeholder="密码" /></li>
+                <li>
+                    <input name="" type="button" class="loginbtn" value="登录" onclick="loginClick()" />
+                    <label>
+                        <input name="" type="checkbox" value="" checked="checked" />记住密码
+                    </label>
+                    <label>
+                        <a href="#">忘记密码？</a>
+                    </label>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="loginbm"><%=@nd.Site.WebCopyright%> </div>
+</body>
+</html>

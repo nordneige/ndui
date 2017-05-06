@@ -1,0 +1,212 @@
+﻿<textarea id="TTT" style="width:100%;height:700px">
+    <div ng-if="grid" id="grid" ng-include="'<%=@nd.Site.Url%>/cap/controls/ndgridx?name=MyGrid'"></div>
+    <div ng-if="form" id="form" ng-include="'<%=@nd.Site.Url%>/cap/controls/ndfrom?name=MyForm'"></div>
+    <script>
+    app.controller('MyController', function ($scope) {
+
+        $scope.page = { title: '服务器管理', app: '协同应用平台' }
+
+        $scope.types = [
+            { name: '网站服务器', value: 'Web' },
+            { name: '文件服务器', value: 'File' },
+            { name: '服务服务器', value: 'Service' },
+            { name: '数据库服务器', value: 'DB' }
+        ];
+
+        //页面注册主函数 放置其它操作之前
+        GridSetting($scope, "dbsqlx/operation?name=ServerPC", 'MyGrid').bind({
+            columns: [
+                { name: 'PCName', text: '服务器名称', visble: true },
+                { name: 'PCIP', text: '服务器IP', visble: true },
+                { name: 'UserName', text: '用户名', visble: true },
+                { name: 'UserPassWord', text: '密码', visble: true },
+                { name: 'Discraption', text: '描述', visble: true },
+                {
+                    name: 'IsEnable', text: '是否监管', visble: true, enable: false,
+                    bountdata: function (r) { return r ? '正在监管' : '停止监管'; }
+                },
+                { name: 'CreateTime', text: '创建日期', visble: true },
+                { name: 'StopTime', text: '停用日期', visble: true },
+                {
+                    name: 'TypeName', text: '服务器类别', visble: true,
+                    bountdata: function (r) { return $nd.getname(r, $scope.types); }
+                }
+            ],
+            toolbar: [
+                { value: '导出', ngclick: function () { $scope.MyGrid.excel("服务器信息.xlsx"); } },
+                {
+                    value: '导入', ngclick: function (a, t) {
+                        var fid = $nd.guid();
+                        MakeModal($scope).bind({
+                            src: '<%=@nd.Site.Url%>/cap/controls/fileupload?key=25459BBB-A05B-4460-9A52-5F821125E2B9&fid=' + fid,
+                            title: '上传数据',
+                            width: 300,
+                            height: 200,
+                            data: fid,
+                            ColseName: '取消',
+                            Click: function (model) {
+                                var file = NordNeige.Files.FileHanders.GetFile(model.data);
+                                if (file.success) {
+                                    NordNeige.Core.Web.HttpHandlers.FileHanders.ExcelReader([file.data.FieldID + file.data.Extension, 1], function (res) {
+                                        if (res.success) {
+                                            MakeModal($scope).bind({
+                                                src: '<%=@nd.Site.Url%>/cap/controls/exceldata?id=' + res.data[0].value,
+                                                title: '详细数据',
+                                                width: 1000,
+                                                height: 500,
+                                                data: file.data.fid,
+                                                ColseName: '取消'
+                                            }).show();
+                                        } else {
+                                            alert('读取数据失败！');
+                                        }
+                                    });
+                                }
+                            }
+                        }).show();
+                    }
+                },
+                {
+                    value: '新增', ngclick: function () {
+                        $scope.form = true;
+                        $('#grid').hide();
+                        $('#form').show();
+                        $scope.MyForm.ToFormData([
+                            {
+                                lsws: { name: 'PCName', type: 'input', text: '服务器名称', validate: 'required', value: '', maxlength: 5 },
+                                rsws: {
+                                    name: 'PCIP', type: 'input', text: '服务器IP', validate: function (m) {
+                                        if (!m.value || m.value.length == 0) {
+                                            return "必填选项！";
+                                        }
+
+                                        var d = $nd.getdata('dbsqlx/operation?name=hasIn', [m.value]);
+                                        if (d.success) {
+                                            if (d.data.length > 0) {
+                                                return "该服务器已经存在！";
+                                            }
+                                        } else {
+                                            return "获取服务器校验失败，请重新提交！";
+                                        }
+                                        return "";
+                                    }, value: ''
+                                }
+                            },
+                            {
+                                lsws: { name: 'UserName', type: 'input', text: '用户名', validate: 'required', value: '' },
+                                rsws: { name: 'UserPassWord', type: 'input', text: '密码', validate: 'required', value: '' }
+                            },
+                            {
+                                lsws: { name: 'Discraption', type: 'textarea', text: '描述', validate: 'required', value: '' }
+                            },
+                            {
+                                lsws: { name: "CreateTime", type: "date", text: "创建日期", value: '<%=@nd.day%>', validate: 'required' },
+                                rsws: { name: "StopTime", type: "date", text: "停用日期", value: "" }
+                            },
+                            {
+                                lsws: { name: 'IsEnable', type: 'checkbox', text: '是否监管', validate: 'required', value: false },
+                                rsws: { name: 'TypeName', type: 'select', text: '服务器类别', validate: 'required', value: 'Web', options: $scope.types }
+                            }
+                        ]);
+
+                        $scope.MyForm.buttons = [
+                            {
+                                ngclick: function () {
+                                    var d = $scope.MyForm.FromFormData();
+                                    if ($scope.MyForm.validate) {
+                                        $scope.MyGrid.validate = true;
+                                        $scope.MyGrid.Add(d);
+                                        $scope.MyGrid.validate = undefined;
+                                    }
+                                }, text: '确定'
+                            },
+                            {
+                                ngclick: function () {
+                                    $('#form').hide();
+                                    $('#grid').show();
+                                }, text: '返回'
+                            }
+                        ];
+                    }
+                }],
+            command: [{
+                cmd: '编辑', ngclick: function (r) {
+                    $scope.MyGrid.formtype = 'edite';
+                    $scope.MyGrid.ToFormData([
+                        { name: 'id', type: 'hidden', text: 'id', value: r.id },
+                        { name: 'PCName', type: 'input', text: '服务器名称', validate: 'required', value: r.PCName },
+                        { name: 'PCIP', type: 'input', text: '服务器IP', validate: 'required', value: r.PCIP },
+                        { name: 'UserName', type: 'input', text: '用户名', validate: 'required', value: r.UserName },
+                        { name: 'UserPassWord', type: 'input', text: '密码', validate: 'required', value: r.UserPassWord },
+                        { name: 'Discraption', type: 'textarea', text: '描述', value: r.Discraption },
+                        { name: 'IsEnable', type: 'checkbox', text: '是否有效', value: r.IsEnable },
+                        { name: 'CreateTime', type: 'datetime', text: '创建日期', validate: 'required', value: r.CreateTime },
+                        { name: 'StopTime', type: 'date', text: '停用日期', value: r.StopTime },
+                        { name: 'TypeName', type: 'select', text: '服务器类别', value: r.TypeName, options: $scope.types }
+                    ], 1000);
+                    $scope.MyGrid.saveClick = function () {
+                        $scope.MyGrid.Update($scope.MyGrid.FromFormData());
+                    };
+                }
+            },
+            { cmd: '查看', ngclick: function (r) { $scope.MyGrid.showMyData(r); } },
+            { cmd: '删除', ngclick: function (r) { if (confirm("确定删除么？")) { $scope.MyGrid.Delete(r); } } }],
+            Title: '服务器'
+        })
+        .searchSetting(
+            [
+                {
+                    name: 'PCIP', type: 'input', text: '服务器IP', value: '',
+                    bindlable: function (r) { return r; },
+                    showview: function (v, t) {
+                        $scope.cachetree = v;
+                        if (!$nd.getsession('org')) {
+                            var data = NordNeige.Handlers.CapHanders.GetTreeModel('');
+                            if (data.success) {
+                                $nd.setsession('org', data.data);
+                            } else {
+                                alert(data.message);
+                            }
+                        }
+                        setTimeout(function () {
+                            $nd.$apply($scope, function () {
+                                $scope.cbtype = 'org';
+                                NgTreeSetting($scope, $nd.getsession('org'), [{ value: $scope.cachetree.value }]);
+                                $("#TreeModal").modal('show');
+                                $scope.ndtreeclick = function () {
+                                    if ($scope.NgTree.checkeddata.length > 0) {
+                                        $scope.cachetree.value = $scope.NgTree.checkeddata[0].value;
+                                        $scope.cachetree.lable = $scope.NgTree.checkeddata[0].name;
+                                        $scope.cachetree.modal = $scope.NgTree.checkeddata[0];
+                                    }
+                                    $("#TreeModal").modal('hide');
+                                }
+                            });
+                        }, 1000);
+                    }
+                },
+                { name: 'PCName', type: 'input', text: '服务器名称', value: '' }],
+            [
+                { name: 'IsEnable', type: 'select', text: '是否有效', value: '', options: [{ "name": "请选择", "value": "" }, { "name": "正在监管", "value": "1" }, { "name": "停止监管", "value": "0" }] },
+                { name: 'TypeName', type: 'input', text: '服务器类别', value: '' }
+            ])
+        .refresh();
+
+        FormSetting($scope, "dbsqlx/operation?name=ServerPC", 'MyForm');
+
+        $scope.grid = true;
+        $scope.form = false;
+        $scope.retrun = function () {
+            $scope.grid = true;
+            $scope.form = false;
+        }
+    });
+    </script>
+
+</textarea>
+<script>
+    app.controller('MyController', function ($scope) {
+        $scope.page = { title: '表单Demo', app: '系统管理' }
+        $('#TTT').height($(window).height()-260);
+    });
+</script>

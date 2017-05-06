@@ -1,0 +1,415 @@
+﻿<div>
+    <style>
+        .textAreaWithLines {
+            font-family: courier;
+            border: 1px solid #ddd;
+        }
+
+            .textAreaWithLines textarea, .textAreaWithLines div {
+                border: 0px;
+                line-height: 120%;
+                font-size: 12px;
+            }
+
+        .lineObj {
+            color: #666;
+        }
+    </style>
+    <div class="thumbnail margin-bottom10">
+        <fieldset class="ed_div" title="提交参数">
+            <legend>>>提交参数&nbsp;&nbsp;<span id="UU"></span></legend>
+            <textarea id="txtIn" data-original-title="编辑" onkeypress="tooltip(this)" style="width:100%" class="form-control span12 min-height200"></textarea>
+        </fieldset>
+    </div>
+    <div class="thumbnail min-height30  margin-bottom10" style="overflow:hidden">
+        <div class="nav-tabs" style="display:block">
+            <div class="pull-left">
+                <ul class="nav nav-tabs" style="margin-bottom:0px;border-bottom:none;">
+                    <li><input class="btn btn-primary" type="button" onclick="ReStart();" value="重启服务器" /></li>
+                    <li class="active"><a href="#home" data-toggle="tab">提交测试</a></li>
+                    <li><a href="#profile" data-toggle="tab">代码生成</a></li>
+                    <li><a href="#profile2" data-toggle="tab">常用工具</a></li>
+                </ul>
+            </div>
+            <div class="pull-right">
+                <a id="exc" style="display:none" onclick="OpenLog();" href="#txtOut">查看异常</a>
+            </div>
+        </div>
+        <div id="myTabContent" class="tab-content">
+            <div class="tab-pane fade active in" id="home">
+                <table style="vertical-align:middle" class="margin10">
+                    <tr>
+                        <td><label class="margin-clear">接口：</label></td>
+                        <td><select class="form-control " style="width:250px" id="sendtos"></select></td>
+                        <td><label class="margin-clear">&nbsp;方法：</label> </td>
+                        <td><select class="form-control" style="width:250px" id="sendm"></select></td>
+                        <td>
+                            <input id="btnsubmit" class="btn btn-default" type="button" onclick="DataTest();" value="提交数据" />
+                        </td>
+                        <td>
+                            <input id="btnsubmit" class="btn btn-default" type="button" onclick="DoTest();" value="自动化测试" />
+                        </td>
+                        <td>
+                            <input class="btn btn-default" type="button" onclick="OpenInterface();" value="查看接口说明" />
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="tab-pane fade" id="profile">
+                <table style="vertical-align:middle" class="margin10">
+                    <tr>
+                        <td>
+                            <label class="margin-clear">选择数据库：</label>
+                        </td>
+                        <td>
+                            <select class="form-control" id="sedb"></select>
+                        </td>
+                        <td>
+                            <input type="button" class="btn btn-default" onclick="sqlToClass();" value="Sql转换" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label class="margin-clear">查看表或视图：</label>
+                        </td>
+                        <td>
+                            <select class="form-control" id="setv"></select>
+                        </td>
+                        <td>
+                            <input type="button" class="btn btn-default" onclick="DBTableToClass();" value="表或视图转换" />
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="tab-pane fade" id="profile2">
+                <table style="vertical-align:middle" class="margin10">
+                    <tr>
+                        <td>
+                            <input type="button" class="btn btn-default" onclick="getlog();" value="错误日志查询" />
+                        </td>
+                        <td>
+                            <input type="button" class="btn btn-default" onclick="JsonToClass();" value="JsonToClass" />
+                        </td>
+                        <td>
+                            <input type="button" class="btn btn-default" onclick="JsonToClass();" value="ClassToJson" />
+                        </td>
+                        <td>
+                            <input type="button" class="btn btn-default" onclick="JsonToClass();" value="SqlToJson" />
+                        </td>
+                        <td>
+                            <input type="button" class="btn btn-default" onclick="GetGUID();" value="获取GUID" />
+                        </td>
+                        <td>
+                            <input type="button" class="btn btn-default" onclick="colorboxshow();" value="取色器" />
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="thumbnail">
+        <fieldset class="ed_div" title="服务信息">
+            <legend>>>处理结果&nbsp;&nbsp;<span id="loginfo" style="color:red; font-size:11px;padding:5px;"></span></legend>
+            <textarea id="txtOut" class="span12 min-height200" style="height:300px;width:99%"></textarea>
+        </fieldset>
+    </div>
+    <script type="text/javascript">
+        var lineObjOffsetTop = 2;
+        function createTextAreaWithLines(id) {
+            var el = document.createElement('DIV');
+            var ta = document.getElementById(id);
+            ta.parentNode.insertBefore(el, ta);
+            el.appendChild(ta);
+            el.className = 'textAreaWithLines';
+            ta.style.position = 'absolute';
+            ta.style.left = '30px';
+            el.style.height = ta.offsetHeight + 'px';
+            el.style.overflow = 'hidden';
+            el.style.position = 'relative';
+            var lineObj = document.createElement('DIV');
+            lineObj.style.position = 'absolute';
+            lineObj.style.top = lineObjOffsetTop + 'px';
+            lineObj.style.left = '0px';
+            lineObj.style.width = '27px';
+            el.insertBefore(lineObj, ta);
+            lineObj.style.textAlign = 'right';
+            lineObj.className = 'lineObj';
+            var string = '';
+            for (var no = 1; no < 1000; no++) {
+                if (string.length > 0) string = string + '<br>';
+                string = string + no;
+            }
+            ta.onkeydown = function () { positionLineObj(lineObj, ta); };
+            ta.onmousedown = function () { positionLineObj(lineObj, ta); };
+            ta.onscroll = function () { positionLineObj(lineObj, ta); };
+            ta.onblur = function () { positionLineObj(lineObj, ta); };
+            ta.onfocus = function () { positionLineObj(lineObj, ta); };
+            ta.onmouseover = function () { positionLineObj(lineObj, ta); };
+            lineObj.innerHTML = string;
+        }
+        function positionLineObj(obj, ta) {
+            obj.style.top = (ta.scrollTop * -1 + lineObjOffsetTop) + 'px';
+        }
+        createTextAreaWithLines('txtOut');
+    </script>
+    <script src="<%=@nd.Site.Url%>/ndui2/lib/Jsonformat.js"></script>
+    <script>
+        app.set({ title: '代码生成测试', app: '系统管理' });
+        function tooltip($event) {
+            $('#txtIn').tooltip({ animation: true, trigger: 'focus' });
+        }
+
+        var t;
+
+        function sqlToClass() {
+            if (t) clearTimeout(t);
+            $('#exc').hide();
+            var d = $('#txtIn').val().replace(/[\t]/g, "").replace(/[\n]/g, "");
+            NordNeige.Core.Web.HttpHandlers.DeveloperHandler.CodeSqlClass([d, $("#sedb").val()], function (result) {
+                $('#txtOut').val(result.data);
+                if (result.message) {
+                    log = result.message.replace("method error!", "");
+                    t = setTimeout(function () { $('#exc').show(); }, 3500);
+                    $("#loginfo").text("提交失败！");
+                }
+                else {
+                    log = "";
+                    $("#loginfo").text("发送：" + result.servertimein + " 完成：" + result.servertimeout + " 消息：" + result.message);
+                }
+            });
+        }
+
+        function JsonToClass() {
+            if (t) clearTimeout(t);
+            $('#exc').hide();
+            var d = $('#txtIn').val().replace(/[\t]/g, "").replace(/[\n]/g, "").replace(/["]/g, "'");
+            NordNeige.Core.Web.HttpHandlers.DeveloperHandler.JsonToClass(d, function (result) {
+                $('#txtOut').val(result.data);
+                if (result.message) {
+                    log = result.message.replace("method error!", "");
+                    t = setTimeout(function () { $('#exc').show(); }, 3500);
+                    $("#loginfo").text("提交失败！");
+                }
+                else {
+                    log = "";
+                    $("#loginfo").text("发送：" + result.servertimein + " 完成：" + result.servertimeout + " 消息：" + result.message);
+                }
+            });
+        }
+
+        function GetGUID() {
+            if (t) clearTimeout(t);
+            $('#exc').hide();
+            NordNeige.Core.Web.HttpHandlers.DeveloperHandler.GetGUID(null, function (result) {
+                if (result.success) {
+                    $('#txtOut').val(formatJson(result.data));
+                } else {
+                    $('#txtOut').val(result.data);
+                }
+                if (result.message) {
+                    log = result.message.replace("method error!", "");
+                    t = setTimeout(function () { $('#exc').show(); }, 3500);
+                    $("#loginfo").text("提交失败！");
+                }
+                else {
+                    log = "";
+                    $("#loginfo").text("发送：" + result.servertimein + " 完成：" + result.servertimeout + " 消息：" + result.message);
+                }
+            });
+        }
+
+        function OpenInterface() {
+            var sendtos = $("#sendtos").val().replace(/[.]/g, "/");
+            var sendtosText = $("#sendtos").find("option:selected").text();
+            var sendm = $("#sendm").val().replace(/[.]/g, "/");
+            window.open('<%=@nd.Site.Url%>/' + sendtos + '/' + sendm + '?action=desc&dllname=' + sendtosText.substring(0, sendtosText.indexOf('-')), '_blank');
+        }
+
+        function DBTableToClass() {
+            if (t) clearTimeout(t);
+            $('#exc').hide();
+            NordNeige.Core.Web.HttpHandlers.DeveloperHandler.DBTableToClass([$("#setv").val(), $("#sedb").val()], function (result) {
+                $('#txtOut').val(result.data);
+                if (result.message) {
+                    log = result.message.replace("method error!", "");
+                    t = setTimeout(function () { $('#exc').show(); }, 3500);
+                    $("#loginfo").text("提交失败！");
+                }
+                else {
+                    log = "";
+                    $("#loginfo").text("发送：" + result.servertimein + " 完成：" + result.servertimeout + " 消息：" + result.message);
+                }
+            });
+        }
+
+        function GetTestData(result) {
+            if (t) clearTimeout(t);
+            $('#exc').hide();
+            if (result.success) {
+                $('#txtOut').val(formatJson(result.data));
+            } else {
+                $('#txtOut').val(formatJson(result));
+            }
+            if (result.errorcode) {
+                log = result.errorcode;
+                t = setTimeout(function () { $('#exc').show(); }, 3500);
+                $("#loginfo").text("提交失败！");
+            }
+            else {
+                log = "";
+                $("#loginfo").text("发送：" + result.servertimein + " 完成：" + result.servertimeout + " 消息：" + result.message);
+            }
+        }
+
+        function DataTest() {
+            var d = $('#txtIn').val().replace(/[\n]/g, "");
+            if ((d.startsWith('[') && d.endsWith(']')) || (d.startsWith('{') && d.endsWith('}'))) {
+                eval('(' + $("#sendtos").val() + "." + $("#sendm").val() + "(" + d + ",GetTestData)" + ')');
+            } else {
+                eval('(' + $("#sendtos").val() + "." + $("#sendm").val() + "(['" + d + "'],GetTestData)" + ')');
+            }
+        }
+
+        log = "";
+
+        function OpenLog() {
+            NordNeige.Core.Web.HttpHandlers.DeveloperHandler.GetLog(log, function (result) {
+                if (result.data) {
+                    $('#txtOut').val(result.data);
+                } else {
+                    $('#txtOut').val('日志尚未生成，请您稍后发送....');
+                }
+            });
+        }
+
+        function getlog() {
+            var d = $('#txtIn').val().replace(/[\n]/g, "");
+            NordNeige.Core.Web.HttpHandlers.DeveloperHandler.GetLog(d, function (result) {
+                if (result.data) {
+                    $('#txtOut').val(result.data);
+                } else {
+                    $('#txtOut').val('日志尚未生成，请您稍后发送....');
+                }
+            });
+        }
+
+        function DoTest() { alert('该功能尚未开发！'); }
+
+        function ReStart() {
+            $('#txtOut').val("服务器正在重新启动。。。");
+            if (t) clearTimeout(t);
+            $('#exc').hide();
+            NordNeige.Core.Web.HttpHandlers.DeveloperHandler.ReStart(null, function (result) {
+                $('#txtOut').val(result.data);
+                sessionStorage.clear();
+                if (result.message) {
+                    log = result.message.replace("method error!", "");
+                    t = setTimeout(function () { $('#exc').show(); }, 3500);
+                    $("#loginfo").text("提交失败！");
+                }
+                else {
+                    log = "";
+                    $("#loginfo").text("发送：" + result.servertimein + " 完成：" + result.servertimeout + " 消息：" + result.message);
+                }
+            });
+        }
+
+        var vdata = [];
+
+        $(function () {
+            NordNeige.Core.Web.HttpHandlers.DeveloperHandler.GetDBString(null, function (r) {
+                if (r.success) {
+                    $nd.selbind('sedb', r.data);
+                    $('#setv').html('');
+                    NordNeige.Core.Web.HttpHandlers.DeveloperHandler.GetTableView($("#sedb").val(), function (r) {
+                        $('#setv').html('');
+                        if (r.success) {
+                            $nd.selbind('setv', r.data);
+                        } else {
+                            $nd.selbind('setv', [{ name: 'error...', text: 'error...' }]);
+                        }
+                    });
+                } else {
+                    $nd.selbind('sedb', [{ name: 'error...', text: 'error1...' }]);
+                }
+            });
+            $('#sedb').change(function () {
+                $('#setv').html('');
+                NordNeige.Core.Web.HttpHandlers.DeveloperHandler.GetTableView($("#sedb").val(), function (r) {
+                    $('#setv').html('');
+                    if (r.success) {
+                        $nd.selbind('setv', r.data);
+                    } else {
+                        $nd.selbind('setv', [{ name: 'error...', text: 'error2...' }]);
+                    }
+                });
+            });
+
+            //获取所有方法
+            function GetAllMethod(result) {
+                if (result.success) {
+                    $('#sendm').html('');
+                    $nd.selbind('sendm', result.data);
+                    $('#btnsubmit').show();
+                    vdata = result.data;
+                    for (var i = 0; i < vdata.length; i++) {
+                        if (vdata[i].value === $nd.selval('sendm')) {
+                            $('#txtIn').val(vdata[i].demodata);
+                            $('#UU').html($("#sendtos").val() + "." + $("#sendm").val());
+                            break;
+                        }
+                    }
+                }
+                else {
+                    $('#sendm').html('');
+                    $nd.selbind('sendm', [{ name: 'I am sorry to error...', text: 'I am sorry to error...' }]);
+                }
+            }
+
+            $('#sendtos').change(function () {
+                $('#sendm').html('');
+                $nd.selbind('sendm', [{ name: 'loading...', text: 'loading...' }]);
+                $('#btnsubmit').hide();
+                eval('(' + $("#sendtos").val().replace(/\//g, ".") + ".GetAllMethod(null,GetAllMethod)" + ')');
+            });
+
+            $('#sendm').change(function () {
+                for (var i = 0; i < vdata.length; i++) {
+                    if (vdata[i].value === this.value) {
+                        $('#txtIn').val(vdata[i].demodata);
+                        break;
+                    }
+                }
+                $('#UU').html($("#sendtos").val() + "." + $("#sendm").val());
+            });
+
+            NordNeige.Core.Web.HttpHandlers.DeveloperHandler.GetDll(null, function (result) {
+                if (result.data) {
+                    var sel = document.getElementById('sendtos');
+                    sel.innerHTML = "";
+                    for (var i = 0; i < result.data.length; i++) {
+                        if (result.data[i].type == ('-1')) {
+                            sel.innerHTML += '<option  style = "color:blue"  value="' + result.data[i].value + '">' + result.data[i].name + '</option>'
+                        } else if (result.data[i].type == ('0')) {
+                            sel.innerHTML += '<option  style = "color:#003E3E"  value="' + result.data[i].value + '">' + result.data[i].name + '</option>'
+                        }
+                        else if (result.data[i].type == ('1')) {
+                            sel.innerHTML += '<option  style = "color:#750075"  value="' + result.data[i].value + '">' + result.data[i].name + '</option>'
+                        }
+                        else {
+                            sel.innerHTML += '<option  value="' + result.data[i].value + '">' + result.data[i].name + '</option>'
+                        }
+                    }
+
+                };
+                eval('(' + $("#sendtos").val() + ".GetAllMethod(null,GetAllMethod)" + ')');
+            });
+
+            $nd.ndmodal('colorboxModal').bind({ include: '<%=@nd.Site.Url%>/api/dev/color', isiframe: true, title: '取色器' });
+        });
+
+        function colorboxshow() {
+            colorboxModal.show();
+        }
+    </script>
+</div>

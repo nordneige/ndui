@@ -1,0 +1,298 @@
+﻿<script>
+    app.set({ app: '系统维护', title: '数据结构' });
+    var types = [{ text: '请选择', value: '' }, { text: '表', value: 'U' }, { text: '视图', value: 'V' }, { text: '存储过程', value: 'P' }];
+    var dbpath = $nd.que('dbpath');//'system';
+    $nd.ndgrid('MyGrid', 'dbsqlx/' + dbpath + '?name=Objects').bind({
+        columns: [
+                { name: 'name', text: '名称', visble: true },
+                { name: 'Description', text: '描述信息', visble: true },
+                {
+                    name: 'type', text: '类别', visble: true, bountdata: function (r) {
+                        var rs = r;
+                        types.forEach(function (obj) { if (obj.value == r.Trim()) { rs = obj.text; } });
+                        return rs;
+                    }
+                },
+                { name: 'create_date', text: '创建日期', visble: true },
+                { name: 'modify_date', text: '最后修改日期', visble: true }
+        ],
+        command: [
+            {
+                ngif: function (index) { if (MyGrid.data[index].type.Trim() == 'P') return false; return true; },
+                cmd: '查看字段', ngclick: function (r) {
+                    var TypeStr = r.type.Trim();
+                    $nd.ndmodal('TableModel').bind({
+                        includename: 'TableInfo',
+                        title: r.name + '表结构',
+                        load: function () {
+                            $nd.ndgrid('TableInfo', 'dbsqlx/' + dbpath + '?name=GetTableName').bind({
+                                autoheight: false,
+                                showsearch: false,
+                                height: (TableModel.getheight() - 230) + 'px',
+                                columns: [
+                                        { name: 'ColumnsName', text: '字段名称', visble: true },
+                                        { name: 'Description', text: '字段描述', visble: true },
+                                        { name: 'Length', text: '字段长度', visble: true },
+                                        { name: 'ColumnType', text: '类型', visble: true },
+                                        { name: 'IsNullable', text: '是否为空', visble: true }
+                                ],
+                                command: [//CID
+                                    { cmd: '查看', ngclick: function (rc) { return TableInfo.showView(rc); } },
+                                    {
+                                        ngif: function (index) { return TypeStr == 'U'; },
+                                        cmd: '编辑描述', ngclick: function (rc) {
+                                            $nd.ndmodal('MyDescriptionInfo').bind({
+                                                width: '50%',
+                                                height: '240',
+                                                title: $nd_lang.detailedcontent,
+                                                includename: 'MyDescriptionForm',
+                                                load: function () {
+                                                    $nd.ndform('MyDescriptionForm').bind({ nopanel: true }).setdata(
+                                                        [
+                                                            { name: "TableName", type: "label", text: "表名称", value: rc.TableName },
+                                                            { name: "ColumnsName", type: "label", text: "字段名称", value: rc.ColumnsName },
+                                                            { name: "Description", type: "input", text: "字段描述", value: rc.Description, validate: 'required' }
+                                                        ]).print();
+                                                },
+                                                command: [
+                                                    {
+                                                        cmd: '确定', ngclick: function () {
+                                                            if (rc.Description == null || rc.Description.length == 0) {
+                                                                TableInfo.DoSql('Add', MyDescriptionForm.getdata(), function () { MyDescriptionInfo.hide(); TableInfo.refresh(); });
+                                                            } else {
+                                                                TableInfo.DoSql('Update', MyDescriptionForm.getdata(), function () { MyDescriptionInfo.hide(); TableInfo.refresh(); });
+                                                            }
+                                                        }
+                                                    },
+                                                    { cmd: '取消', ngclick: function () { MyDescriptionInfo.hide(); } }
+                                                ]
+                                            }).show();
+                                        }
+                                    }
+                                ]
+                            }).bindsearch([{ name: 'name', type: 'input', text: '字段名称', value: r.name }]).refresh();
+                        },
+                        command: [{ cmd: '确定', ngclick: function () { this.model().hide(); } }]
+                    }).show();
+                }
+            },
+            {
+                ngif: function (index) { if (MyGrid.data[index].type.Trim() == 'P' || MyGrid.data[index].type.Trim() == 'V') return true; return false; },
+                cmd: '查看语句', ngclick: function (r) {
+                    MyGrid.DoSql('Helptext', { name: r.name }, function (ref) {
+                        if (ref.success) {
+                            $nd.ndmodal('MyDInfo').bind({
+                                width: '50%',
+                                height: '240',
+                                title: $nd_lang.detailedcontent,
+                                load: function () {
+                                    var htmlstr = '';
+                                    for (var i = 0; i < ref.data.length; i++) { htmlstr += ref.data[i].Text + '<br/>' }
+                                    var html = '<div style="padding:10px;min-height:50px;max-height:240px;overflow-y:scroll">' + htmlstr + '</div>';
+                                    $('#' + this.includename).html(html);
+                                },
+                                command: [{ cmd: $nd_lang.sure, ngclick: function () { window['MyDInfo'].hide(); } }]
+                            }).show();
+                        } else {
+                            alert(ref.message);
+                        }
+                    });
+                }
+            },
+            {
+                ngif: function (index) { if (MyGrid.data[index].type.Trim() == 'P') return false; return true; },
+                cmd: '查看数据', ngclick: function (r) {
+                    $nd.ndmodal('DataModel').bind({
+                        includename: 'DataInfo',
+                        title: r.name + '表数据',
+                        width: $(window).width() * 0.8,
+                        load: function () {
+                            $nd.getdata('dbsqlx/' + dbpath + '?name=ObjectColumns', [r.name], function (res) {
+                                if (res.success) {
+                                    var columns = [];
+                                    var search = [{ name: 'TableName', type: 'hidden', text: '字段名称', value: r.name }, { name: 'where', type: 'hidden', text: 'where', value: '1=1' }];
+                                    var searchmore = [];
+                                    var orderby = '';
+                                    var forme = [];
+                                    var PK = [];
+                                    for (var i = 0; i < res.data.length; i++) {
+                                        if (i == 0) { orderby = res.data[i].ColumnsName; }
+                                        var text = (res.data[i].Description && res.data[i].Description.length) > 0 ? res.data[i].Description : res.data[i].ColumnsName;
+                                        columns.push({ name: res.data[i].ColumnsName, text: text, visble: true });
+                                        if (i < 5) {
+                                            if (res.data[i].ColumnType == 'datetime' || res.data[i].ColumnType == 'date') {
+                                                search.push({ name: res.data[i].ColumnsName, type: 'rangetime', text: text, value: '', valueName1: 'Start_' + res.data[i].ColumnsName, valueName2: 'End_' + res.data[i].ColumnsName });
+                                            } else {
+                                                search.push({ name: res.data[i].ColumnsName, type: 'input', text: text, value: '' });
+                                            }
+                                        } else {
+                                            if (res.data[i].ColumnType == 'datetime' || res.data[i].ColumnType == 'date') {
+                                                searchmore.push({ name: res.data[i].ColumnsName, type: 'rangetime', text: text, value: '', valueName1: 'Start_' + res.data[i].ColumnsName, valueName2: 'End_' + res.data[i].ColumnsName });
+                                            } else {
+                                                searchmore.push({ name: res.data[i].ColumnsName, type: 'input', text: text, value: '' });
+                                            }
+                                        }
+                                        forme.push({ name: res.data[i].ColumnsName, type: res.data[i].PK == '1' ? "label" : "input", text: res.data[i].PK == '1' ? '<a style="color:blue">' + text + '<a>' : text, value: '' });
+                                        if (res.data[i].PK == '1') { PK.push(res.data[i].ColumnsName); }
+                                    }
+                                    $nd.ndgrid('DataInfo', 'dbsqlx/' + dbpath + '?name=GetTableData').bind({
+                                        autoheight: false,
+                                        height: (DataModel.getheight() - 230) + 'px',
+                                        columns: columns,
+                                        command: [
+                                            { cmd: '查看', ngclick: function (rc) { return DataInfo.showView(rc); } },
+                                            {
+                                                ngif: function (r) { return PK.length > 0; },
+                                                cmd: '修改', ngclick: function (rce) {
+                                                    $nd.ndmodal('DataEdModel').bind({
+                                                        includename: 'DataEdForm',
+                                                        title: '数据编辑',
+                                                        load: function () {
+                                                            var newform = [];
+                                                            for (var j = 0; j < forme.length; j++) { newform.push({ name: forme[j].name, type: forme[j].type, text: forme[j].text, value: rce[forme[j].name] }); }
+                                                            $nd.ndform('DataEdForm').bind({ nopanel: true }).setdata(newform).print();
+                                                        },
+                                                        command: [{
+                                                            cmd: '确定', ngclick: function () {
+                                                                var d = DataEdForm.getdata();
+                                                                if (DataEdForm.validate) {
+                                                                    var update = 'update ' + r.name + ' set ';
+                                                                    var ss = 0;
+                                                                    for (var dd in d) {
+                                                                        if (d[dd] != '' && rce[dd] != null) {
+                                                                            update += (ss > 0 ? ',' : '') + dd + "=@'@" + d[dd] + "@'@"; ss++;
+                                                                        }
+                                                                    }
+                                                                    update += ' where ';
+                                                                    for (var cc = 0; cc < PK.length; cc++) { update += (cc == 0 ? "" : " and ") + PK[cc] + " =@'@" + d[PK[cc]] + "@'@ "; }
+                                                                    DataInfo.Update({ update: update }, function () { DataEdModel.hide(); });
+                                                                }
+                                                            }
+                                                        },
+                                                        { cmd: '取消', ngclick: function () { this.model().hide(); } }]
+                                                    }).show();
+                                                }
+                                            }
+                                        ],
+                                        toolbar: [
+                                            {
+                                                value: '导出代码', ngclick: function () {
+                                                    $nd.ndmodal('MyCodeInfo').bind({
+                                                        width: '50%',
+                                                        height: '240',
+                                                        title: $nd_lang.detailedcontent,
+                                                        load: function () {
+                                                            var html = '<div style="padding:10px;min-height:50px;max-height:240px;overflow-y:scroll">' + GetCode(columns, search, searchmore) + '</div>';
+                                                            $('#' + this.includename).html(html);
+                                                        },
+                                                        command: [{ cmd: $nd_lang.sure, ngclick: function () { window['MyCodeInfo'].hide(); } }]
+                                                    }).show();
+                                                }
+                                            }
+                                        ],
+                                        searchdatadefault: search,
+                                        searchdatamore: searchmore,
+                                        getsearch: function (name) {
+                                            var sd;
+                                            DataInfo.searchdata.forEach(function (s) {
+                                                if (s.name == name) {
+                                                    sd = s;
+                                                }
+
+                                                DataInfo.search.data = $nd.getform(s, DataInfo.search.data);
+                                                if (s.name != 'where' && s.name != 'TableName' && DataInfo.search.data[s.name].length > 0) {
+                                                    var hasrangetime = false;
+                                                    DataInfo.searchdata.forEach(function (obj) {
+                                                        if (obj.name == s.name && obj.type == 'rangetime') {
+                                                            DataInfo.search.data.where += (' and [' + s.name + "] >= @'@" + DataInfo.search.data[s.valueName1] + "@'@ and [" + s.name + "] < " + "@'@" + DataInfo.search.data[s.valueName2] + "@'@");
+                                                            hasrangetime = true;
+                                                        }
+                                                    });
+                                                    if (!hasrangetime) {
+                                                        DataInfo.search.data.where += (' and [' + s.name + "] like @'@" + DataInfo.search.data[s.name] + "@'@");
+                                                    }
+                                                }
+                                            });
+
+                                            DataInfo.search.data.TableName = '[' + DataInfo.search.data.TableName + ']';
+
+                                            if (name) { return sd; } else { return DataInfo.search.data; }
+                                        }
+                                    });
+                                    DataInfo.search.sort = orderby;
+                                    DataInfo.refresh();
+                                } else {
+                                    alert(res.message);
+                                }
+                            });
+                        },
+                        command: [{ cmd: '确定', ngclick: function () { this.model().hide(); } }]
+                    }).show();
+                }
+            },
+            {
+                cmd: '编辑描述', ngclick: function (rc) {
+                    $nd.ndmodal('MyTableDescriptionInfo').bind({
+                        width: '50%',
+                        height: '240',
+                        title: $nd_lang.detailedcontent,
+                        includename: 'MyTableDescriptionForm',
+                        load: function () {
+                            $nd.ndform('MyTableDescriptionForm').bind({ nopanel: true }).setdata(
+                                [
+                                    { name: "TableName", type: "label", text: "名称", value: rc.name },
+                                    { name: "type", type: "label", text: "类型", value: rc.type.Trim() == 'U' ? 'table' : rc.type.Trim() == 'V' ? 'view' : 'PROCEDURE' },
+                                    { name: "Description", type: "input", text: "字段描述", value: rc.Description, validate: 'required' }
+                                ]).print();
+                        },
+                        command: [
+                            {
+                                cmd: '确定', ngclick: function () {
+                                    if (rc.Description == null || rc.Description.length == 0) {
+                                        MyGrid.DoSql('Add', MyTableDescriptionForm.getdata(), function () { MyTableDescriptionInfo.hide(); MyGrid.refresh(); });
+                                    } else {
+                                        MyGrid.DoSql('Update', MyTableDescriptionForm.getdata(), function () { MyTableDescriptionInfo.hide(); MyGrid.refresh(); });
+                                    }
+                                }
+                            },
+                            { cmd: '取消', ngclick: function () { MyTableDescriptionInfo.hide(); } }
+                        ]
+                    }).show();
+                }
+            }
+        ]
+    }).bindsearch([
+        { name: 'type', type: 'select', text: '类别', value: '', options: types },
+        { name: 'name', type: 'input', text: '名称', value: '' }
+    ]).refresh();
+
+    function GetCode(columns, search, searchmore) {
+        var code = '$nd.ndgrid(\'MyGrid\', \'dbsqlx/???\').bind(\n';
+        code += '{ \n&nbsp;&nbsp;columns:[\n'
+        for (var i = 0; i < columns.length; i++) {
+            if (i < columns.length - 1) {
+                code += '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{ name: "' + columns[i].name + '", text: "' + columns[i].text + '", visble: false },\n'
+            } else {
+                code += '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{ name: "' + columns[i].name + '", text: "' + columns[i].text + '", visble: false }'
+            }
+        }
+
+        var searchStr = '';
+        for (var s1 = 0; s1 < search.length; s1++) {
+            if (search[s1].type != 'hidden') {
+                searchStr += '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{ name: "' + search[s1].name + '", type: "input", text: "' + search[s1].text + '", value: "" }';
+                if (s1 < search.length - 1) { searchStr += ',\n' }
+            }
+        }
+
+        var searchmoreStr = '';
+        for (var s1 = 0; s1 < searchmore.length; s1++) {
+            searchmoreStr += '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{ name: "' + searchmore[s1].name + '", type: "input", text: "' + searchmore[s1].text + '", value: "" }';
+            if (s1 < searchmore.length - 1) { searchmoreStr += ',\n' }
+        }
+
+        code += '\n],\n&nbsp;&nbsp;command: [{ cmd: \'查看\', ngclick: function (rc) { return MyGrid.showView(rc); } }]\n}).bindsearch([\n' + searchStr + '\n],[]).refresh();';
+        return code.replaceAll('\n', '<br/>');
+    }
+
+</script>

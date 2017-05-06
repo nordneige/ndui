@@ -1,0 +1,69 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE =Edge">
+    <meta charset="utf-8" />
+    <link href="<%=@nd.Site.Url%>/ndui/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+    <link href="<%=@nd.Site.Url%>/ndui/lib/datepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+    <style>
+        @font-face {
+            font-family: 'glyphicons-halflings-regular';
+            src: 
+                url('../../lib/bootstrap/dist/fonts/glyphicons-halflings-regular.eot') format('embedded-opentype'), 
+                url('../../lib/bootstrap/dist/fonts/glyphicons-halflings-regular.svg') format('svg'), 
+                url('../../lib/bootstrap/dist/fonts/glyphicons-halflings-regular.ttf') format('truetype'), 
+                url('../../lib/bootstrap/dist/fonts/glyphicons-halflings-regular.woff') format('woff');
+        }
+    </style>
+    <!--[if lt IE 9]>
+      <script src="<%=@nd.Site.Url%>/ndui/lib/json2.js"></script>
+      <script src="<%=@nd.Site.Url%>/ndui/lib/html5shiv.min.js"></script>
+      <script src="<%=@nd.Site.Url%>/ndui/lib/respond.min.js"></script>
+      <script src="<%=@nd.Site.Url%>/ndui/lib/es5-shim.min.js"></script>
+      <script src="<%=@nd.Site.Url%>/ndui/lib/es5-sham.min.js"></script>
+    <![endif]-->
+    <script src="<%=@nd.Site.Url%>/ndui/lib/jquery-1.11.2.min.js"></script>
+    <link href="<%=@nd.Site.Url%>/ndui/lib/jquery-ui-1.12.1.custom/jquery-ui.css" rel="stylesheet" />
+    <link href="<%=@nd.Site.Url%>/ndui/lib/magicsuggest-min.css" rel="stylesheet" />
+    <link href="<%=@nd.Site.Url%>/ndui/css/site.css" rel="stylesheet" />
+    <script src="<%=@nd.Site.Url%>/ndui/lib/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="<%=@nd.Site.Url%>/ndui/lib/bootstrap/dist/js/moment-with-locales.js"></script>
+    <script src="<%=@nd.Site.Url%>/ndui/lib/template.js"></script>
+    <script src="<%=@nd.Site.Url%>/ndui/js/site.js?v=<%=@nd.Site.Version%>"></script>
+    <script src="<%=@nd.Site.Url%>/ndui/lib/magicsuggest-min.js"></script>
+    <script src="<%=@nd.Site.Url%>/ndui/lib/jquery-ui-1.12.1.custom/jquery-ui.min.js"></script>
+    <script src="<%=@nd.Site.Url%>/ndui/lib/nord.axd?v=<%=@nd.Site.Version%>"></script>
+    <script src="<%=@nd.Site.Url%>/ndui/js/ndvalidate.js"></script>
+    <link href="<%=@nd.Site.Url%>/ndui/lib/viewer.css" rel="stylesheet" />
+    <script src="<%=@nd.Site.Url%>/ndui/lib/viewer.js"></script>
+    <script src="<%=@nd.Site.Url%>/ndui/js/ndvalidateMessage.js"></script>
+    <script src="<%=@nd.Site.Url%>/ndui/lib/datepicker/js/bootstrap-datetimepicker.js"></script>
+    <script src="<%=@nd.Site.Url%>/ndui/lib/datepicker/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+    <link rel="stylesheet" href="<%=@nd.Site.Url%>/ndui/lib/zTreev3/css/zTreeStyle/zTreeStyle.css" type="text/css">
+    <script src="<%=@nd.Site.Url%>/ndui/lib/zTreev3/js/jquery.ztree.core.js"></script>
+    <script src="<%=@nd.Site.Url%>/ndui/lib/zTreev3/js/jquery.ztree.excheck.js"></script>
+    <script src="<%=@nd.Site.Url%>/ndui/js/ndui.js?v=<%=@nd.Site.Version%>"></script>
+    <script src="<%=@nd.Site.Url%>/ndui/js/nduiTemplate.js?v=<%=@nd.Site.Version%>"></script>
+    <link href="<%=@nd.Site.Url%>/ndui/lib/jquery-ui-1.12.1.custom/jquery.multiselect.css" rel="stylesheet" />
+    <link href="<%=@nd.Site.Url%>/ndui/lib/jquery-ui-1.12.1.custom/jquery.multiselect.filter.css" rel="stylesheet" />
+    <script src="<%=@nd.Site.Url%>/ndui/lib/jquery-ui-1.12.1.custom/jquery.multiselect.min.js"></script>
+    <script src="<%=@nd.Site.Url%>/ndui/lib/jquery-ui-1.12.1.custom/jquery.multiselect.filter.min.js"></script>
+    <script>
+       window.langtype = '<%=HttpContext.Current.Request.UserLanguages[0].IndexOf("zh", StringComparison.CurrentCultureIgnoreCase)>-1 ? "ZH" : "EN"%>';
+    </script>
+    <script src='<%=@nd.Site.Url%>/ndui/lang/<%=HttpContext.Current.Request.UserLanguages[0].IndexOf("zh", StringComparison.CurrentCultureIgnoreCase)>-1 ? "zh_cn" : "en"%>.js?v=<%=@nd.Site.Version%>'></script>
+</head>
+<body style="padding-right:0px;">
+    <div id="myForm" name="myForm">
+         <div class="content">
+             <div class="modal fade small" id="LoadingModal" style="z-index:9999999" data-backdrop="static"  tabindex="-1" role="dialog" aria-labelledby="LoadingModalLable" aria-hidden="false">
+                 <div class="modal-dialog " role="document" style="margin-top:200px">
+                     <div class="modal-content">
+                         <div class="modal-body">
+                             <h4 class="modal-title" id="LoadingModalLable"><img src="<%=@nd.Site.Url%>/ndui/images/loaders/loader1.gif" />&nbsp;数据处理中请稍后。。。</h4>
+                         </div>
+                     </div>
+                 </div>
+             </div>

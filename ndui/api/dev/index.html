@@ -1,0 +1,1132 @@
+﻿<form method="post" name="myForm" ng-submit="Save(myForm.$valid)">
+    <div class="row-fluid">
+        <div class="form-search thumbnail margin-bottom10">
+            <div id="searchbox" class="form-search thumbnail ">
+                <div class="input-append  margin10">
+                    <label class="">路径</label>
+                    <input class="form-control" type="text" required ng-model="Grid.Path" />
+                </div>
+                <div class="input-append  margin10">
+                    <label class="">应用</label>
+                    <input class="form-control" type="text" required ng-model="Grid.APP" />
+                </div>
+                <div class="input-append  margin10">
+                    <label class="">标题</label>
+                    <input class="form-control" type="text" required ng-model="Grid.Title" />
+                </div>
+                <div class="input-append  margin10">
+                    <label class="">数据路径</label>
+                    <select ng-model="Grid.sql" ng-change="gettable(Grid.sql)" class="form-control" ng-options="o for o in sqls"></select>
+                    <input class="form-control" type="text" required ng-model="Grid.SName" />
+                </div>
+                <div class="input-append  margin10">
+                    <label class="">数据表或视图</label>
+                    <select ng-model="tablename" class="form-control" ng-options="o.value as o.name  for o in table"></select>
+                    <button class="btn" type="button" ng-click="ToSql()">
+                        生成表单数据
+                    </button>
+                </div>
+            </div>
+            <div class="form-search thumbnail ">
+                <div class="margin10">
+                    <label style="margin-left:50px;vertical-align:top;text-align:right; width:60px">select</label>
+                    <textarea type="text" rows="5" style="border:none; text-shadow:none;" required ng-model="Grid.select" class="form-control"></textarea>
+                    <br />
+                    <div style="margin-left:120px; margin-top:10px; margin-bottom:10px">
+                        <a class="btn btn-mini" ng-click="ToView()">
+                            拆解成列
+                        </a>
+                    </div>
+                </div>
+                <div class="margin10">
+                    <label style="margin-left:50px;vertical-align:top;text-align:right; width:60px">from</label>
+                    <textarea type="text" rows="5" style="border:none; text-shadow:none;" required ng-model="Grid.from" class="form-control"></textarea>
+                    <br />
+                </div>
+                <div class="margin10">
+                    <label style="margin-left:50px;vertical-align:top;text-align:right; width:60px" class="">where</label>
+                    <textarea type="text" rows="5" style="border:none; text-shadow:none;" required ng-model="Grid.where" class="form-control"></textarea>
+                    <br />
+                    <div ng-repeat="a in Grid.and">
+
+                        <label style="margin-left:100px;width:30px;text-align:right">{{$index+1}} if</label>  <input type="text" required style="border:none; text-shadow:none;" ng-model="a.name" class="w100" />
+                        <label class="w50" style="width:20px">and</label>  <input type="text" required style="border:none; text-shadow:none;" ng-model="a.value" class="w500" />
+                        <a class="btn btn-mini" ng-click="itemsdelete(Grid.and,$index)">
+                            删除
+                        </a>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-mini">转换</button>
+                            <button type="button" class="btn btn-mini dropdown-toggle" data-toggle="dropdown">
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li ng-click="toEq(a)"><a>转为等于</a></li>
+                                <li ng-click="toLike(a)"><a>转为like</a></li>
+                                <li ng-click="toM(a)"><a>转为大于</a></li>
+                                <li ng-click="toL(a)"><a>转为小于</a></li>
+                                <li ng-click="toME(a)"><a>转为大于等于</a></li>
+                                <li ng-click="toLE(a)"><a>转为小于等于</a></li>
+                            </ul>
+                        </div>
+                        <br />
+                    </div>
+                    <div style="margin-left:120px; margin-top:10px; margin-bottom:10px">
+                        <a class="btn btn-mini" ng-click="addand()">
+                            添加条件
+                        </a>
+                        <a class="btn btn-mini" ng-click="WToView()">
+                            拆解成查询条件
+                        </a>
+                    </div>
+
+                </div>
+                <div class="margin10">
+                    <label style="margin-left:50px;text-align:right; width:60px">order by</label>
+                    <input type="text" style="border:none; text-shadow:none;" required ng-model="Grid.orderby" class="w800 form-control" /><br />
+                </div>
+                <div class="margin10">
+                    <label style="margin-left:50px;vertical-align:top;text-align:right; width:60px">excel</label>
+                    <textarea type="text" rows="5" style="border:none; text-shadow:none;" required ng-model="Grid.excel" class="w800 form-control"></textarea>
+                    <br />
+                </div>
+                <div class="margin10">
+                    <label style="margin-left:50px;vertical-align:top;text-align:right; width:60px">insert</label>
+                    <textarea type="text" rows="3" style="border:none; text-shadow:none;" ng-model="Grid.insert" class="w800 form-control"></textarea>
+                    <br />
+                </div>
+                <div class="margin10">
+                    <label style="margin-left:50px;vertical-align:top;text-align:right; width:60px">update</label>
+                    <textarea type="text" rows="3" style="border:none; text-shadow:none;" ng-model="Grid.update" class="w800 form-control"></textarea>
+                    <br />
+                </div>
+                <div class="margin10">
+                    <label style="margin-left:50px;vertical-align:top;text-align:right; width:60px">delete</label>
+                    <textarea type="text" rows="2" style="border:none; text-shadow:none;" ng-model="Grid.delete" class="w800 form-control"></textarea>
+                    <br />
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                其它SQL
+            </div>
+            <div class="panel-body">
+                <table class="table table-bordered ">
+                    <tr ng-repeat="a in Grid.dosql">
+                        <td class="w180"><input style="border:none;box-shadow:none" ng-model="a.name" type="text" /></td>
+                        <td>
+                            <textarea type="text" rows="3" class="w800" style="border:none; text-shadow:none;box-shadow:none" ng-model="a.value"></textarea>
+                        </td>
+                        <td>
+                            <a class="btn btn-mini" ng-click="itemsdelete(Grid.dosql,$index)">
+                                删除
+                            </a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="panel-footer">
+                <a class="btn" ng-click="adddosql()">
+                    添加
+                </a>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                变量值
+            </div>
+            <div class="panel-body">
+                <table class="table table-bordered ">
+                    <tr ng-repeat="a in Grid.Arrays">
+                        <td class="w180"><input ng-model="a.name" type="text" /></td>
+                        <td>
+                            <table>
+                                <tr ng-repeat="t in a.value">
+                                    <td>name:<input ng-model="t.name" type="text" /></td>
+                                    <td>
+                                        value:<input ng-model="t.value" type="text" />
+                                        <input ng-model="t.notstr" type="checkbox" />非字符
+                                    </td>
+                                    <td>
+                                        <a class="btn btn-mini" ng-click="itemsdelete(a.value,$index)">
+                                            删除
+                                        </a>
+                                    </td>
+                                </tr>
+                            </table>
+                            <a class="btn" ng-click="addarrayv(a)">
+                                添加
+                            </a>
+                        </td>
+                        <td>
+                            <a class="btn btn-mini" ng-click="itemsdelete(Grid.Arrays,$index)">
+                                删除
+                            </a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="panel-footer">
+                <a class="btn" ng-click="addarray()">
+                    添加
+                </a>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                列设定
+            </div>
+            <div class="panel-body">
+                <div class="well">
+                    <table id="dropzone" class="table">
+                        <thead>
+                            <tr class="tthide">
+                                <th style="width: 16px;">#</th>
+                                <th style="width: 16px;"></th>
+                                <th>name</th>
+                                <th>text</th>
+                                <th>visble</th>
+                                <th>enable</th>
+                                <th>sorting</th>
+                                <th>showlength</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="drop-item" ng-repeat='r in Grid.Colums' style="background-color:{{r.color}}">
+                                <td style="width: 16px;">
+                                    <span style="cursor:pointer" ng-mousedown="sortable(Grid.Colums,$index,r, 'dropzone', '.drop-item')" class="icon-align-justify"></span>
+                                </td>
+                                <td style="width: 16px;">
+                                    {{$index+1}}
+                                </td>
+
+                                <td><input class="w180 form-control" type="text" ng-model="r.name" /></td>
+                                <td><input class="w180 form-control" type="text" ng-model="r.text" /></td>
+                                <td><input type="checkbox" ng-model="r.visble" /></td>
+                                <td><input type="checkbox" ng-model="r.enable" /></td>
+                                <td><input class="w180 form-control" type="text" ng-model="r.sorting" /></td>
+                                <td><input class="w180 form-control" type="number" ng-model="r.showlength" /></td>
+                                <td>
+                                    <a class="btn btn-mini" ng-click="itemsdelete(Grid.Colums,$index)">删除</a>
+                                    <a class="btn btn-mini" ng-click="ToSearch(r)">生成查询条件</a>
+                                    <a class="btn btn-mini" ng-click="binddataset(r,'binddatatemp','binddataModalSD')">数据转换</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="panel-footer">
+                <button class="btn" type="button" ng-click="AddColums()">数据增加列</button>
+                <button class="btn" type="button" ng-click="ToExcelSql()">生产Excel语句</button>
+                <button class="btn" type="button" ng-click="ToInsertSql()">添加表单新增</button>
+                <button class="btn" type="button" ng-click="ToUpdateSql()">添加表单编辑</button>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                添加功能列
+            </div>
+            <div class="panel-body">
+                <table class="table">
+                    <thead>
+                        <tr class="tthide">
+                            <th style="width: 16px;">#</th>
+                            <th>操作名称</th>
+                            <th>操作方法</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat='r in cmd'>
+                            <td style="width: 16px;" ng-bind="$index+1"></td>
+                            <td ng-bind="r.cmd"></td>
+                            <td>
+                                <span ng-bind="r.ngclick.substring(0,50)">
+                                </span>
+                                <a ng-if="r.ngclick.length>50" href="#showModal" ng-click='showClick(r.ngclick)' role="button" data-toggle="modal">
+                                    <span class="icon-bar" style="font-weight:bold;">...</span>
+                                </a>
+                            </td>
+                            <td><a class="btn" ng-click="itemsdelete(cmd,$index)">删除</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="panel-footer">
+                <button class="btn" type="button" ng-click="Addcmd()">增加操作</button>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                查询条件设定
+            </div>
+            <div class="panel-body">
+                <div class="well">
+                    <table id="dropzones1" class="table">
+                        <thead>
+                            <tr class="tthide">
+                                <th style="width: 16px;">#</th>
+                                <th style="width: 16px;"></th>
+                                <th>name</th>
+                                <th>type</th>
+                                <th>text</th>
+                                <th>value</th>
+                                <th class="w300"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="drop-items1" ng-repeat='r in Grid.SearchA'>
+                                <td style="width: 16px;">
+                                    <span style="cursor:pointer" ng-mousedown="sortableA(Grid.SearchA,$index,r, 'dropzones1', '.drop-items1')" class="icon-align-justify"></span>
+                                </td>
+                                <td style="width: 16px;" ng-bind="$index+1"></td>
+                                <td><input type="text"  class="form-control" ng-model="r.name" /></td>
+                                <td><select type="text"  class="form-control" ng-model="r.type" ng-options="o  for o  in types"></select></td>
+                                <td><input type="text"  class="form-control" ng-model="r.text" /></td>
+                                <td><input type="text"  class="form-control" ng-model="r.value" /></td>
+                                <td>
+                                    <a class="btn btn-mini" ng-click="itemsdelete(Grid.SearchA,$index)">删除</a>
+                                    <a class="btn btn-mini" ng-click="Move(Grid.SearchA,Grid.SearchB,$index)">移动到更多条件</a>
+                                    <a class="btn btn-mini" ng-click="MakeWhere(r)">生成where</a>
+                                    <a class="btn btn-mini" ng-click="binddataset(r,'MM','otherModalSD')">其它设置</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="panel-footer">
+                <button class="btn" type="button" ng-click="AddA()">增加查询条件</button>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                更多条件设定
+            </div>
+            <div class="panel-body">
+                <div class="well">
+                    <table id="dropzones2" class="table">
+                        <thead>
+                            <tr class="tthide">
+                                <th style="width: 16px;">#</th>
+                                <th>name</th>
+                                <th>type</th>
+                                <th>text</th>
+                                <th>value</th>
+                                <th class="w300"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="drop-items2" ng-repeat='r in Grid.SearchB'>
+                                <td style="width: 16px;">
+                                    <span style="cursor:pointer" ng-mousedown="sortableB(Grid.SearchB,$index,r, 'dropzones2', '.drop-items2')" class="icon-align-justify"></span>
+                                </td>
+                                <td style="width: 16px;" ng-bind="$index+1"></td>
+                                <td><input type="text" class="form-control" ng-model="r.name" /></td>
+                                <td><select type="text"  class="form-control" ng-model="r.type" ng-options="o  for o  in types"></select></td>
+                                <td><input type="text"  class="form-control" ng-model="r.text" /></td>
+                                <td><input type="text"  class="form-control" ng-model="r.value" /></td>
+                                <td>
+                                    <a class="btn btn-mini" ng-click="itemsdelete(Grid.SearchB,$index)">删除</a>
+                                    <a class="btn btn-mini" ng-click="Move(Grid.SearchB,Grid.SearchA,$index)">移动到查询条件</a>
+                                    <a class="btn btn-mini" ng-click="MakeWhere(r)">生成where</a>
+                                    <a class="btn btn-mini" ng-click="binddataset(r,'MM','otherModalSD')">其它设置</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="panel-footer">
+                <button class="btn" type="button" ng-click="AddB()">增加更多条件</button>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                其他操作
+            </div>
+            <div class="panel-body">
+                <table class="table">
+                    <thead>
+                        <tr class="tthide">
+                            <th style="width: 16px;">#</th>
+                            <th>操作名称</th>
+                            <th>操作方法</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat='r in toolbar'>
+                            <td style="width: 16px;" ng-bind="$index+1"></td>
+                            <td ng-bind="r.value"></td>
+                            <td>
+                                <span ng-bind="r.ngclick.substring(0,50)">
+                                </span>
+                                <a ng-if="r.ngclick.length>50" href="#showModal" ng-click='showClick(r.ngclick)' role="button" data-toggle="modal">
+                                    <span class="icon-bar" style="font-weight:bold;">...</span>
+                                </a>
+                            </td>
+                            <td><a class="btn" ng-click="itemsdelete(toolbar,$index)">删除</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="panel-footer">
+                <button class="btn" type="button" ng-click="AddToolbar()">增加其他操作</button>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-footer">
+                <button class="btn" type="submit" ng-disabled="myForm.$invalid">生成</button>
+            </div>
+        </div>
+
+        <div class="modal w1000 ml-400 hide fade" id="showToolbarModal" tabindex="-1" role="dialog" aria-labelledby="showToolbarModalLabel" aria-hidden="true">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <div class="controls">
+                    <input type="text" class="margin-clear  form-control" ng-model="editetoolbar.value" />
+                    <div class="btn-group" style="display:inline-block">
+                        <button type="button" class="btn  dropdown-toggle" data-toggle="dropdown">
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li ng-click="ExcelAdd()"><a>导出</a></li>
+                            <li ng-click="GirdAdd()"><a>新增</a></li>
+                            <li ng-click="DeleteAll()"><a>批量删除</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-body form-horizontal">
+                <div class="control-group">
+
+                </div>
+                <div class="control-group">
+                    function () {<br />
+                    &nbsp;&nbsp;
+                    <textarea rows="10" style="width:100%;height:100%;border:none" class="form-control" ng-model="editetoolbar.ngclick"></textarea><br />
+                    }<br />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" ng-click="saveToolbar()" class="btn btn-primary">确定</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+        </div>
+
+        <div class="modal w1000 ml-400 hide fade" id="showCmdModal" tabindex="-1" role="dialog" aria-labelledby="showCmdModalLabel" aria-hidden="true">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <input type="text" class="margin-clear form-control" ng-model="editecmd.cmd" />
+                <div class="btn-group" style="display:inline-block">
+                    <button type="button" class="btn btn-mini dropdown-toggle" data-toggle="dropdown">
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li ng-click="EditeCmd()"><a>编辑</a></li>
+                        <li ng-click="DelCmd()"><a>删除</a></li>
+                        <li ng-click="ViewCmd()"><a>查看</a></li>
+                        <li ng-click="toL(a)"><a>跳转</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="modal-body form-horizontal">
+                function (r) {<br />
+                &nbsp;&nbsp;
+                <textarea rows="9"  class="form-control" style="width:100%;height:100%;border:none" ng-model="editecmd.ngclick"></textarea><br />
+                }
+            </div>
+            <div class="modal-footer">
+                <button type="button" ng-click="saveCmd()" class="btn btn-primary">确定</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+        </div>
+
+        <div class="modal small hide fade" id="showModal" tabindex="-1" role="dialog" aria-labelledby="showModalLabel" aria-hidden="true">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h3 id="showModalLabel">详细内容</h3>
+            </div>
+            <div class="modal-body" style="padding:10px">
+                <textarea readonly="readonly" class="form-control" rows="15" style="width:360px;height:100%" ng-model='Show'></textarea>
+            </div>
+        </div>
+
+        <div class="modal hide fade" id="otherModalSD" tabindex="-1" role="dialog" aria-labelledby="otherModalSDLabel" aria-hidden="true">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h3 id="otherModalSDLabel">属性设置</h3>
+            </div>
+            <div class="modal-body" style="padding:10px">
+                <div class="control-group">
+                    <label>bindtype</label>
+                    <select class="form-control" ng-model="MM.bindtype">
+                        <option value="">请选择</option>
+                        <option value="Name">Name</option>
+                        <option value="Employee">Employee(工号)</option>
+                        <option value="Name">OrgId(部门ID)</option>
+                    </select>
+                    <label>options</label><a class="btn-mini btn" style="display:inline" ng-click="addItmes()">+</a>
+                    <table>
+                        <tr ng-repeat="c in MM.options">
+                            <td>name:</td>
+                            <td><input class="w100  form-control" type="text" ng-model="c.name" /></td>
+                            <td>value:</td>
+                            <td>
+                                <input class="w100  form-control" type="text" ng-model="c.value" />
+                                <a class="btn-mini btn" ng-click="itemsdelete(MM.options,$index)">-</a>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">确定</button>
+            </div>
+        </div>
+
+        <div class="modal hide fade" id="binddataModalSD" tabindex="-1" role="dialog" aria-labelledby="binddataModalSDLabel" aria-hidden="true">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h3 id="binddataModalSDLabel">绑定数据转换设定</h3>
+                <div class="btn-group" style="display:inline-block">
+                    <button type="button" class="btn btn-mini dropdown-toggle" data-toggle="dropdown">
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li ng-click="isorno()"><a>是否</a></li>
+                        <li ng-click="isornoselect()"><a>自定义字典</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="modal-body" style="padding:10px">
+                <textarea rows="9" style="width:100%;height:100%;border:none" ng-model="binddatatemp.binddata"></textarea>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" ng-click="binddatasetSave()" data-dismiss="modal">确定</button>
+            </div>
+        </div>
+
+
+        <div class="modal hide fade w1200" id="editeModal" tabindex="-1" role="dialog" aria-labelledby="editeModalLabel" aria-hidden="true">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h3 id="editeModalLabel">编辑列设定</h3>
+            </div>
+            <div class="modal-body" style="padding:10px">
+                <table id="dropzone4" class="table">
+                    <thead>
+                        <tr class="tthide">
+                            <th style="width: 16px;">#</th>
+                            <th style="width: 16px;"></th>
+                            <th>绑定字段</th>
+                            <th>字段名称</th>
+                            <th>表单类型</th>
+                            <th>默认值</th>
+                            <th>表单验证</th>
+                            <th>不为空</th>
+                            <th>条件字段</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="drop-item4" ng-repeat='r in ColumsEdite'>
+                            <td style="width: 16px;">
+                                <span style="cursor:pointer" ng-mousedown="sortable4(ColumsEdite,$index,r, 'dropzone4', '.drop-item4')" class="icon-align-justify"></span>
+                            </td>
+                            <td style="width: 16px;" ng-bind="$index+1"></td>
+                            <td><input class="w100  form-control" type="text" ng-model="r.name" /></td>
+                            <td><input class="w180  form-control" type="text" ng-model="r.text" /></td>
+                            <td>
+                                <select class="w80  form-control" ng-model="r.type" ng-options="o  for o  in types"></select>
+                            </td>
+                            <td><input class="w80 form-control" type="text" ng-model="r.value" /></td>
+                            <td>
+                                <select class="w80  form-control" ng-model="r.validate" ng-options="o  for o  in validates"></select>
+                            </td>
+                            <td><input class="w80  form-control" type="checkbox" ng-model="r.isnotnull" value="50" /></td>
+                            <td><input class="w80  form-control" type="checkbox" ng-model="r.isTiaojian" value="50" /></td>
+                            <td><a class="btn" ng-click="itemsdelete(ColumsEdite,$index)">删除</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+            <div class="modal-body " style="padding:10px">
+                <label ng-bind="ColumsEditesql"></label>
+            </div>
+            <div class="modal-footer">
+                操作<input type="text" ng-model="DoSqlName" value="50" />
+                名称<input type="text" ng-model="SqlName" value="50" />
+                <button type="button" class="btn btn-default" ng-click="editeModalSaveSql()">更新Sql</button>
+                <button type="button" class="btn btn-default" ng-click="editeModalSave()" data-dismiss="modal">确定</button>
+            </div>
+        </div>
+
+        <div style="clear: both"></div>
+        <script>
+            app.controller('MyController', function ($scope) {
+                $scope.page = { title: '代码生成', app: '系统管理' }
+
+                $('#showModal').width(1000);
+                $scope.DoSqlName = '编辑';
+                $scope.SqlName = 'MyDoSql';
+                $scope.ColumsEditeType = 'edite';
+                $scope.editeModalSave = function () {
+                    var ngclick = " function (r) { \n $scope.MyGrid.formtype = '" + $scope.ColumsEditeType + "'; \n";
+                    ngclick += " $scope.MyGrid.ToFormData(";
+                    if ($scope.Grid.Mydata) {
+                        ngclick += " [ \n";
+                        var ngclickstr = '';
+                        for (var t1 = 0; t1 < $scope.ColumsEdite.length; t1++) {
+                            ngclickstr += "   { name : '" + $scope.ColumsEdite[t1].name + "',type: '" + $scope.ColumsEdite[t1].type + "',text:'" + $scope.ColumsEdite[t1].text + "',validate:'" + $scope.ColumsEdite[t1].validate + ($scope.ColumsEdite[t1].isnotnull ? '|required' : '');
+                            if ($scope.ColumsEditeType == 'edite') {
+                                ngclickstr += "',value:r." + $scope.ColumsEdite[t1].name + "},\n";
+                            } else {
+                                ngclickstr += "',value:" + $scope.ColumsEdite[t1].value + "},\n";
+                            }
+                        }
+
+                        ngclick += ngclickstr.substring(0, ngclickstr.length - 2) + "  \n ]";
+                    }
+                    ngclick += ", 1000); \n $scope.MyGrid.saveClick = function () {\n  $scope.MyGrid.DoSql('" + $scope.SqlName + "',$scope.MyGrid.FromFormData(), function (r) {";
+                    ngclick += "$scope.MyGrid.queryClick();";
+                    ngclick += "alert('修改成功！');";
+                    ngclick += "});\n };} ";
+                    if ($scope.ColumsEditeType == 'edite') {
+                        $scope.cmd.push({
+                            cmd: $scope.DoSqlName,
+                            ngclick: ngclick
+                        });
+                    } else {
+
+                        $scope.toolbar.push({
+                            value: $scope.DoSqlName,
+                            ngclick: ngclick
+                        });
+                    }
+                    var tablename = ($scope.tablename && $scope.tablename.length > 0) ? $scope.tablename : 'T';
+
+
+                    $scope.ColumsEditesql = 'update ' + tablename + ' set ';
+                    if ($scope.ColumsEditeType == 'edite') {
+                        var upsql = '';
+                        var wsql = '';
+                        for (var d = 0; d < $scope.ColumsEdite.length; d++) {
+                            if ($scope.ColumsEdite[d].isTiaojian) {
+                                wsql += $scope.ColumsEdite[d].name + '=\'#' + $scope.ColumsEdite[d].name + '#\' and '
+
+                            } else {
+                                upsql += $scope.ColumsEdite[d].name + '=\'#' + $scope.ColumsEdite[d].name + '#\','
+                            }
+                        }
+                        $scope.ColumsEditesql += upsql.substring(0, upsql.length - 1) + ' where ' + wsql.substring(0, wsql.length - 4);
+                        $scope.Grid.dosql.push({ name: $scope.SqlName, value: $scope.ColumsEditesql });
+                    } else {
+                        $scope.ColumsEditesql = 'insert into ' + tablename + ' ( ';
+                        var upsql = '';
+                        var upsql2 = '';
+                        var wsql = '';
+                        for (var d = 0; d < $scope.ColumsEdite.length; d++) {
+                            if ($scope.ColumsEdite[d].isTiaojian) {
+                                wsql += $scope.ColumsEdite[d].name + '=\'#' + $scope.ColumsEdite[d].name + '#\' and '
+
+                            } else {
+                                upsql += $scope.ColumsEdite[d].name + ',';
+                                upsql2 += '\'#' + $scope.ColumsEdite[d].name + '#\',';
+                            }
+                        }
+                        $scope.ColumsEditesql += upsql.substring(0, upsql.length - 1) + ') VALUES (' + upsql2.substring(0, upsql2.length - 1) + ')' + ' where ' + wsql.substring(0, wsql.length - 4);
+                        $scope.Grid.dosql.push({ name: $scope.SqlName, value: $scope.ColumsEditesql });
+                    }
+                }
+
+                $scope.ColumsEditesql = '';
+                $scope.editeModalSaveSql = function () {
+                    var tablename = ($scope.tablename && $scope.tablename.length > 0) ? $scope.tablename : 'T';
+                    $scope.ColumsEditesql = 'update ' + tablename + ' set ';
+
+                    var upsql = '';
+                    var wsql = '';
+                    for (var d = 0; d < $scope.ColumsEdite.length; d++) {
+                        if ($scope.ColumsEdite[d].isTiaojian) {
+                            wsql += $scope.ColumsEdite[d].name + '=\'#' + $scope.ColumsEdite[d].name + '#\' and '
+
+                        } else {
+                            upsql += $scope.ColumsEdite[d].name + '=\'#' + $scope.ColumsEdite[d].name + '#\','
+                        }
+                    }
+                    $scope.ColumsEditesql += upsql.substring(0, upsql.length - 1) + ' where ' + wsql.substring(0, wsql.length - 4);
+                }
+
+                // $scope.moveing = false;
+                $scope.ColumsEdite = [];
+                $scope.ToUpdateSql = function () {
+                    $scope.ColumsEdite = angular.copy($scope.Grid.Colums);
+                    angular.forEach($scope.ColumsEdite, function (obj) {
+                        obj.type = 'input';
+                        obj.validate = '';
+                        obj.value = 'r.value';
+                        obj.isnotnull = true;
+                        if ($scope.Grid.Identity == obj.name) {
+                            obj.isTiaojian = true;
+                            obj.type = 'hidden';
+                        }
+                    });
+                    $scope.DoSqlName = '编辑';
+                    $scope.ColumsEditeType = 'edite';
+                    $('#editeModal').modal('show');
+                }
+
+                $scope.ToInsertSql = function () {
+                    $scope.ColumsEdite = angular.copy($scope.Grid.Colums);
+                    angular.forEach($scope.ColumsEdite, function (obj) {
+                        obj.type = 'input';
+                        obj.validate = '';
+                        obj.value = '';
+                        obj.isnotnull = true;
+                        if ($scope.Grid.Identity == obj.name) {
+                            obj.isTiaojian = true;
+                            obj.type = 'hidden';
+                        }
+                    });
+                    $scope.ColumsEditeType = 'add';
+                    $scope.DoSqlName = '新增';
+                    $('#editeModal').modal('show');
+                }
+
+
+                $scope.sortable4 = function (arr, $index, r, m, items) {
+                    $('#' + m).sortable({
+                        items: items,
+                        containment: 'parent',
+                        stop: function (event, ui) {
+                            $('#' + m).sortable('destroy');
+                            var $this = ui.item.index();
+                            var newarr = [];
+
+                            if ($this < 0) { newarr.push($scope.Grid.Colums[$index]); }
+
+                            if ($this === $index) { $nd.$apply($scope, function () { $scope.ColumsEdite = $scope.ColumsEdite; }); return; }
+
+                            for (var cc = 0; cc < $scope.ColumsEdite.length; cc++) {
+                                if (cc === $index) { continue; }
+                                if ($this < $index && cc === $this) { newarr.push($scope.ColumsEdite[$index]); }
+                                if ($this > $index && cc === ($this + 1)) { newarr.push($scope.ColumsEdite[$index]); }
+                                newarr.push($scope.ColumsEdite[cc]);
+                            }
+
+                            $nd.$apply($scope, function () { $scope.ColumsEdite = newarr; });
+                        }
+                    });
+                }
+
+                $scope.sortable = function (arr, $index, r, m, items) {
+                    $('#' + m).sortable({
+                        items: items,
+                        containment: 'parent',
+                        stop: function (event, ui) {
+                            $('#' + m).sortable('destroy');
+                            var $this = ui.item.index();
+                            var newarr = [];
+
+                            if ($this < 0) { newarr.push($scope.Grid.Colums[$index]); }
+
+                            if ($this === $index) { $nd.$apply($scope, function () { $scope.Grid.Colums = $scope.Grid.Colums; }); return; }
+
+                            for (var cc = 0; cc < $scope.Grid.Colums.length; cc++) {
+                                if (cc === $index) { continue; }
+                                if ($this < $index && cc === $this) { newarr.push($scope.Grid.Colums[$index]); }
+                                if ($this > $index && cc === ($this + 1)) { newarr.push($scope.Grid.Colums[$index]); }
+                                newarr.push($scope.Grid.Colums[cc]);
+                            }
+
+                            $nd.$apply($scope, function () { $scope.Grid.Colums = newarr; });
+                        }
+                    });
+                }
+
+                $scope.sortableA = function (arr, $index, r, m, items) {
+                    $('#' + m).sortable({
+                        items: items,
+                        containment: 'parent',
+                        stop: function (event, ui) {
+                            $('#' + m).sortable('destroy');
+                            var $this = ui.item.index();
+                            var newarr = [];
+
+                            if ($this < 0) { newarr.push($scope.Grid.SearchA[$index]); }
+
+                            if ($this === $index) { $nd.$apply($scope, function () { $scope.Grid.SearchA = $scope.Grid.SearchA; }); return; }
+
+                            for (var cc = 0; cc < $scope.Grid.SearchA.length; cc++) {
+                                if (cc === $index) { continue; }
+                                if ($this < $index && cc === $this) { newarr.push($scope.Grid.SearchA[$index]); }
+                                if ($this > $index && cc === ($this + 1)) { newarr.push($scope.Grid.SearchA[$index]); }
+                                newarr.push($scope.Grid.SearchA[cc]);
+                            }
+
+                            $nd.$apply($scope, function () { $scope.Grid.SearchA = newarr; });
+                        }
+                    });
+                }
+
+                $scope.sortableB = function (arr, $index, r, m, items) {
+                    $('#' + m).sortable({
+                        items: items,
+                        containment: 'parent',
+                        stop: function (event, ui) {
+                            $('#' + m).sortable('destroy');
+                            var $this = ui.item.index();
+                            var newarr = [];
+
+                            if ($this < 0) { newarr.push($scope.Grid.SearchB[$index]); }
+
+                            if ($this === $index) { $nd.$apply($scope, function () { $scope.Grid.SearchB = $scope.Grid.SearchB; }); return; }
+
+                            for (var cc = 0; cc < $scope.Grid.SearchB.length; cc++) {
+                                if (cc === $index) { continue; }
+                                if ($this < $index && cc === $this) { newarr.push($scope.Grid.SearchB[$index]); }
+                                if ($this > $index && cc === ($this + 1)) { newarr.push($scope.Grid.SearchB[$index]); }
+                                newarr.push($scope.Grid.SearchB[cc]);
+                            }
+
+                            $nd.$apply($scope, function () { $scope.Grid.SearchB = newarr; });
+                        }
+                    });
+                }
+
+                //数据字典
+                $scope.dictionary = {}
+
+                //显示绑定
+                $scope.showClick = function (r) { $scope.Show = r; }
+
+                //通用删除函数
+                $scope.itemsdelete = function (items, r) { items.splice(r, 1); }
+
+                $scope.binddatatemp = {};
+                $scope.binddataset = function (r, m, c) {
+                    $('#' + c).modal('show');
+                    $scope[m] = r;
+                }
+
+                //移动函数
+                $scope.Move = function (s1, t1, a) { t1.push(s1[a]); s1.splice(a, 1); }
+
+                //控件类型枚举
+                $scope.types = ['input', 'hidden', 'persontree', 'datetime', 'date', 'orgtree', 'select', 'checkbox', 'htmlbox'];
+                $scope.validates = ['', 'required', 'number', 'decimal', 'email', 'idcard', 'mobile', 'telephone', 'chinese', 'english', 'date', 'quote', 'url', 'ip', 'idcard', 'QQ'];
+
+                //sql选项
+                $scope.sqls = ['dbsqlx/msg?name=', 'dbsqlx/EIACOA?name=', 'dbsqlx/workflow?name=', 'dbsqlx/mobiledb?name=', 'dbsqlx/operation?name=', 'dbsqlx/bm?name=', 'dbsqlx/ama?name=', 'dbsqlx/amr?name=', 'dbsqlx/etravel?name=', 'dbsqlx/meeting?name=', 'dbsqlx/wf?name=', 'dbsqlx/cap?name=', 'dbsqlx/jdm?name=', 'dbsqlx/epm?name=', 'dbsqlx/erm?name=', 'dbsqlx/email?name=', 'dbsqlx/ebudget?name=', 'dbsqlx/scex?name=', 'dbsqlx/brm?name=', 'dbsqlx/system?name=', 'dbsqlx/meetingroom?name='];
+
+                //主数据注册
+                $scope.Grid = {
+                    and: [],
+                    dosql: [],
+                    select: '*',
+                    where: '1=1',
+                    from: '',
+                    excel: '*',
+                    Path: 'test/test',
+                    APP: '工具箱',
+                    Title: '测试',
+                    SqlPath: 'GetR3Log',
+                    Colums: [],
+                    SearchA: [],
+                    SearchB: [],
+                    Arrays: [],
+                    sql: 'dbsqlx/operation?name='
+                };
+
+                $scope.addarray = function () {
+                    $scope.Grid.Arrays.push({ name: '', value: [] });
+                }
+
+                $scope.addarrayv = function (a) {
+                    a.value.push({ name: '', value: '' });
+                }
+
+                $scope.cmd = [];
+                $scope.toolbar = [{ value: '导出', ngclick: 'function () { $scope.MyGrid.excel("数据.xlsx"); } ' }];
+
+
+
+                $scope.isorno = function () {
+                    $scope.binddatatemp.binddata = "function (r) {return r ? '是' : '否';}"
+                }
+
+                $scope.isornoselect = function () {
+                    $scope.binddatatemp.binddata = "function (r) {";
+                    $scope.binddatatemp.binddata += " var objs = $scope.States.find(function (obj) { return obj.value == r })";
+                    $scope.binddatatemp.binddata += "if (objs) {";
+                    $scope.binddatatemp.binddata += "return objs.name;";
+                    $scope.binddatatemp.binddata += "}";
+                    $scope.binddatatemp.binddata += "return r;}";
+                }
+
+                $scope.binddatasetSave = function () {
+                    $scope.binddatatemp.binddata = $scope.binddatatemp.binddata;
+                }
+
+                $scope.MM = {}
+                $scope.addItmes = function () {
+                    if (!$scope.MM.options) {
+                        $scope.MM.options = [{ name: '请选择', value: '' }, { name: '是', value: '1' }, { name: '否', value: '0' }];
+                    } else {
+                        $scope.MM.options.push({ name: '请选择', value: '' });
+                    }
+                }
+
+                $scope.ToExcelSql = function () {
+                    $scope.Grid.excel = "";
+                    for (var i = 0; i < $scope.Grid.Colums.length; i++) {
+                        $scope.Grid.excel += $scope.Grid.Colums[i].name + ' as ' + $scope.Grid.Colums[i].text;
+                        if (i < $scope.Grid.Colums.length - 1) $scope.Grid.excel += ",";
+                    }
+                }
+
+                $scope.table = [];
+                $scope.tablename = '';
+                $scope.conn = '';
+
+                //获取数据库结构
+                $scope.gettable = function (p) {
+                    NordNeige.Core.Web.HttpHandlers.DeveloperHandler.GetTableViewForCode([p], function (r) {
+                        if (r.success) {
+                            $nd.$apply($scope, function () {
+                                $scope.table = r.data.data;
+                                $scope.conn = r.data.conn;
+                            });
+                        }
+                        else { alert(r.message); }
+                    });
+                }
+                $scope.gettable('dbsqlx/operation?name=');
+
+                //获取Sql数据
+                $scope.ToSql = function (c) {
+                    NordNeige.Core.Web.HttpHandlers.DeveloperHandler.DBTableToCode([$scope.tablename, $scope.conn], function (r) {
+                        if (r.success) {
+                            $nd.$apply($scope, function () {
+                                $scope.Grid.select = r.data.select;
+                                $scope.Grid.from = r.data.from;
+                                $scope.Grid.excel = r.data.excel;
+                                $scope.Grid.insert = r.data.insert;
+                                $scope.Grid.delete = r.data.delete;
+                                $scope.Grid.update = r.data.update;
+                                $scope.Grid.where = '1=1';
+                                $scope.Grid.orderby = r.data.orderby;
+                                $scope.Grid.Mydata = r.data.data;
+                                $scope.Grid.Identity = r.data.Identity;//表主键
+                                for (var k in r.data.lang) { $scope.lang[k] = r.data.lang[k]; }
+                            });
+
+                        } else { alert(r.message); }
+                    });
+                }
+
+
+                //功能设定
+                $scope.editecmd = { cmd: '操作', ngclick: 'function (r) {alert(r);}' };
+                $scope.Addcmd = function () { $scope.editecmd = {}; $('#showCmdModal').modal('show'); }
+
+                //列功能设定
+                $scope.ViewCmd = function () { $scope.editecmd = { cmd: '查看', ngclick: '$scope.MyGrid.showMyData(r);' }; }
+                $scope.DelCmd = function () { $scope.editecmd = { cmd: '删除', ngclick: 'if(confirm("确定删除么？")){ \n  $scope.MyGrid.Delete(r);\n }' }; }
+                $scope.EditeCmd = function () {
+                    var ngclick = " $scope.MyGrid.formtype = 'edite'; \n";
+                    ngclick += " $scope.MyGrid.ToFormData(";
+                    if ($scope.Grid.Mydata) {
+                        for (var cn = 0; cn < $scope.Grid.Mydata.length; cn++) {
+                            var text = $scope.Grid.Colums.find(function (obj) { return obj.name === $scope.Grid.Mydata[cn].name });
+                            if (text && text.length > 0) {
+                                $scope.Grid.Mydata[cn].text = text.text;
+                            } else {
+                                $scope.Grid.Mydata[cn].text = $scope.Grid.Mydata[cn].name;
+                            }
+                        }
+
+                        ngclick += " [ \n";
+                        for (var t1 = 0; t1 < $scope.Grid.Mydata.length; t1++) {
+                            ngclick += "   { name : '" + $scope.Grid.Mydata[t1].name + "',type: '" + $scope.Grid.Mydata[t1].type + "',text:'" + $scope.Grid.Mydata[t1].text + "',value:r." + $scope.Grid.Mydata[t1].name + "}";
+                            if (t1 != $scope.Grid.Colums.length - 1) ngclick += ',\n';
+                        }
+                        ngclick += "  \n ]";
+                    }
+                    else {
+                        ngclick += " [ \n";
+                        for (var t1 = 0; t1 < $scope.Grid.Colums.length; t1++) {
+                            var type = $scope.Grid.Identity == $scope.Grid.Colums[t1].name ? 'hidden' : 'input';
+
+                            ngclick += "   { name : '" + $scope.Grid.Colums[t1].name + "',type: '" + type + "',text:'" + $scope.Grid.Colums[t1].text + "',value:r." + $scope.Grid.Colums[t1].name + "}";
+                            if (t1 != $scope.Grid.Colums.length - 1) ngclick += ',\n';
+                        }
+                        ngclick += "  \n ]";
+                    }
+                    ngclick += ", 1000); \n $scope.MyGrid.saveClick = function () {\n  $scope.MyGrid.Update($scope.MyGrid.FromFormData());\n }; ";
+
+                    $scope.editecmd = {
+                        cmd: '编辑',
+                        ngclick: ngclick
+                    };
+                }
+
+                //列功能设定保存
+                $scope.saveCmd = function () {
+                    $scope.editecmd.ngclick = ' function (r) {' + $scope.editecmd.ngclick + '}';
+                    $scope.cmd.push($scope.editecmd);
+                    $scope.editecmd = {};
+                    $('#showCmdModal').modal('hide');
+                }
+
+                //ToolBar功能设定
+                $scope.editetoolbar = {};
+                $scope.AddToolbar = function () { $scope.editetoolbar = {}; $('#showToolbarModal').modal('show'); }
+                //ToolBar功能设定
+                $scope.DeleteAll = function () { $scope.editetoolbar = { value: '批量删除', ngclick: '$scope.MyGrid.excel("数据.xlsx"); ' } }
+                $scope.ExcelAdd = function () { $scope.editetoolbar = { value: '导出', ngclick: '$scope.MyGrid.excel("数据.xlsx"); ' } }
+                $scope.GirdAdd = function () {
+                    var ngclick = " $scope.MyGrid.formtype = 'add'; \n";
+                    ngclick += " $scope.MyGrid.ToFormData(";
+
+                    if ($scope.Grid.Mydata) {
+
+                        for (var cn = 0; cn < $scope.Grid.Mydata.length; cn++) {
+                            var text = $scope.Grid.Colums.find(function (obj) { return obj.name === $scope.Grid.Mydata[cn].name });
+                            if (text && text.length > 0) {
+                                $scope.Grid.Mydata[cn].text = text.text;
+                            } else {
+                                $scope.Grid.Mydata[cn].text = $scope.Grid.Mydata[cn].name;
+                            }
+                        }
+
+                        ngclick += angular.toJson($scope.Grid.Mydata);
+                    }
+                    else {
+                        ngclick += " [ \n";
+                        for (var t1 = 0; t1 < $scope.Grid.Colums.length; t1++) {
+                            if ($scope.Grid.Identity != $scope.Grid.Colums[t1].name) {
+                                ngclick += "   { name : '" + $scope.Grid.Colums[t1].name + "',type: 'input',text:'" + $scope.Grid.Colums[t1].text + "',value:''}";
+                            }
+                            if (t1 != $scope.Grid.Colums.length - 1) ngclick += ',\n';
+                        }
+                        ngclick += "  \n ]";
+                    }
+
+                    ngclick += ", 1000); \n $scope.MyGrid.saveClick = function () {\n  $scope.MyGrid.Add($scope.MyGrid.FromFormData());\n }; ";
+
+                    $scope.editecmd = {
+                        cmd: '新增',
+                        ngclick: ngclick
+                    };
+                    $scope.editetoolbar = { value: '新增', ngclick: ngclick }
+                }
+                //ToolBar功能设定保存
+                $scope.saveToolbar = function () {
+                    $scope.editetoolbar.ngclick = ' function () {' + $scope.editetoolbar.ngclick + '}';
+                    $scope.toolbar.push($scope.editetoolbar);
+                    $scope.editetoolbar = {};
+                    $('#showToolbarModal').modal('hide');
+                }
+
+                //语言包
+                $scope.lang = {};
+
+                // $nd.getjson('lang/bm', function (r) { if (r.success) $scope.lang = r.data; });
+
+                //where 条件操作
+                $scope.toLike = function (and) { and.value = and.name + " like '%#" + and.name + "#%'"; }
+                $scope.toEq = function (and) { and.value = and.name + " = '#" + and.name + "#'"; }
+                $scope.toM = function (and) { and.value = and.name + " > '#" + and.name + "#'"; }
+                $scope.toL = function (and) { and.value = and.name + " < '#" + and.name + "#'"; }
+                $scope.toME = function (and) { and.value = and.name + " >= '#" + and.name + "#'"; }
+                $scope.toLE = function (and) { and.value = and.name + " <= '#" + and.name + "#'"; }
+
+                $scope.MakeWhere = function (r) { $scope.Grid.and.push({ name: r.name, value: r.name + " = '#" + r.name + "#'" }); }
+
+                $scope.addand = function () { $scope.Grid.and.push({ name: '', value: '' }); }
+                $scope.adddosql = function () { $scope.Grid.dosql.push({ name: '', value: '' }); }
+
+                $scope.DelW = function (r) { $scope.Grid.and.splice(r, 1); }
+                $scope.ToSearch = function (r) { $scope.Grid.SearchB.push({ name: r.name, text: r.text, type: 'input', value: '', bindtype: "" }); }
+
+
+                $scope.ToView = function () {
+                    var sp = $scope.Grid.select.split(',');
+                    $scope.Grid.Colums = [];
+                    var str = '$';
+                    for (var s = 0; s < sp.length; s++) {
+                        var c = $nd.stripscript(sp[s]);
+                        str += c.Trim() + '$';
+                    }
+
+                    $nd.getdata('dbsql/system?name=getlang', [str], function (r) {
+                        $nd.$apply($scope, function () {
+                            if (r.success) {
+                                for (var c = 0; c < r.data.length; c++) {
+                                    if (!$scope.lang[r.data[c].Code]) {
+                                        $scope.lang[r.data[c].Code] = r.data[c].zh_cn;
+                                    };
+                                }
+                            }
+                            for (var s = 0; s < sp.length; s++) {
+                                var c = $nd.stripscript(sp[s]);
+                                var text = c.Trim();
+                                if ($scope.lang[c.Trim()]) text = $scope.lang[c.Trim()];
+
+                                $scope.Grid.Colums.push({
+                                    name: c.Trim(),
+                                    text: text,
+                                    visble: true,
+                                    enable: false,
+                                    sorting: "sorting",
+                                    showlength: 30
+                                });
+                            }
+                        });
+                    });
+                }
+
+                //绑定编辑数据
+                if ('<%=@nd.pama("id")%>'.length > 0) {
+                    $nd.getdata('dbsql/system?name=getsgridconfig', ['<%=@nd.pama("id")%>'], function (r) {
+                        if (r.success) {
+                            $nd.$apply($scope, function () {
+                                $scope.Grid = $nd.Str2json(r.data[0].json)[0];
+                            });
+                        }
+                    });
+                }
+
+                $scope.WToView = function () { for (var c = 0; c < $scope.Grid.and.length; c++) { $scope.Grid.SearchB.push({ name: $scope.Grid.and[c].name, text: $scope.Grid.and[c].name, type: 'input', value: '', bindtype: "Employee" }); } }
+                $scope.AddColums = function () { $scope.Grid.Colums.push({ name: "A", text: "列一", visble: true, enable: false, sorting: "sorting", showlength: 30 }); }
+                $scope.AddA = function () { $scope.Grid.SearchA.push({ name: "A", text: "查询条件", type: 'input', value: '', bindtype: "Employee" }); }
+                $scope.AddB = function () { $scope.Grid.SearchB.push({ name: "A", text: "查询条件", type: 'input', value: '', bindtype: "Employee" }); }
+
+                $scope.Save = function (isValid) {
+                    if (!isValid) { alert('验证失败'); }
+                    $scope.Grid.SqlPath = $scope.Grid.sql + $scope.Grid.SName;
+                    var postdata = angular.copy($scope.Grid);
+                    postdata.Toolbar = $scope.toolbar;
+                    postdata.Command = $scope.cmd;
+                    NordNeige.Handlers.AutoCodeingHanders.GetGridHtml([postdata, '<%=@nd.pama("id")%>'.length > 0], function (r) {
+                        if (r.success) {
+                            alert('保存成功！');
+                        }
+                        else alert(r.message);
+                    });
+                }
+            });
+        </script>
+    </div>
+</form>
+

@@ -1,0 +1,49 @@
+﻿<h1>运维更新记录</h1>
+<div id="myTimeline">
+</div>
+<link href="<%=@nd.Site.Url%>/ndui/lib/jquery-albe-timeline/templates/simple/style-albe-timeline.css" rel="stylesheet" />
+<script src="<%=@nd.Site.Url%>/ndui/lib/jquery-albe-timeline/jquery-albe-timeline-2.0.1.js"></script>
+<script>
+    var data = [
+        {
+            time: '2017-04-26 10:00',
+            body: [{
+                tag: 'h1',
+                content: "部门经理：李秉军"
+            },
+            {
+                tag: 'p',
+                content: '审批意见：同意'
+            }]
+        },
+        {
+            time: '2017-04-26 11:00',
+            body: [{
+                tag: 'h1',
+                content: "部门高级经理：俞斌"
+            },
+            {
+                tag: 'p',
+                content: '审批意见：同意<a>sd</a>'
+            }]
+        },
+        {
+            time: '2017-04-27 11:00',
+            body: [{
+                tag: 'h1',
+                content: "控制员：杨玉龙"
+            },
+            {
+                tag: 'p',
+                content: '审批意见：同意'
+            }]
+        }
+    ];
+    $(function () {
+        //Internationalization
+        $("#myTimeline").albeTimeline(data, {
+            language: "zh-CN",  //default: pt-BR
+            formatDate:6		//default: 1
+        });
+    });
+</script>

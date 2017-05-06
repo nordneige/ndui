@@ -1,0 +1,101 @@
+﻿<script src="<%=@nd.Site.Url%>/ndui/lib/ueditor/ueditor.config.js"></script>
+<script src="<%=@nd.Site.Url%>/ndui/lib/ueditor/ueditor.all.min.js" charset="utf-8"></script>
+<script src="<%=@nd.Site.Url%>/ndui/lib/ueditor/lang/zh-cn/zh-cn.js"></script>
+
+<div class="col-xs-12 " style="margin-top:10px">
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            记录信息
+        </div>
+        <div class="panel-body">
+            <div class="margin10">
+                <div id="doc" style="width:100%;height:200px"></div>
+            </div>
+        </div>
+        <div class="panel-footer">
+            <input name="sub" class="btn btn-primary btn2" style="left: -57px; top: 33px;" type="submit" value="重置" onclick="resetclick()">
+            <input name="sub" class="btn btn-primary btn2" style="left: -57px; top: 33px;" type="submit" value="保存" onclick="saveclick()">
+        </div>
+    </div>
+    <div id='MyGrid'></div>
+    <script>
+        var ue;
+        $(function () {
+            ue = UE.getEditor('doc');
+        });
+
+        app.set({ title: '系统记录', app: '系统维护' });
+        var dbpath = $nd.que('dbpath');
+        var app = $nd.que('app');
+        var id = '';
+
+        var e = {
+            docname: '',
+            docdesc: ''
+        };
+
+        function resetclick() {
+            id = '';
+            $('#doc').text('');
+        }
+        function saveclick() {
+            $nd.ndmodal('ExcelEdModel').bind({
+                includename: 'ExcelEdForm',
+                title: '存档信息',
+                load: function () {
+                    $nd.ndform('ExcelEdForm').bind({ nopanel: true }).setdata([
+                        { name: 'docname', type: 'input', text: '存档名称', validate: 'required', value: e.docname },
+                        { name: 'docdesc', type: 'input', text: '存档描述', validate: 'required', value: e.docdesc },
+                        { name: 'setby', type: 'label', text: '存档人', validate: 'required', value: '<%=@nd.User.UserName%>' }
+                    ], [
+                        { name: 'app', type: 'hidden', text: 'app', value: app },
+                        { name: 'id', type: 'hidden', text: 'id', value: id },
+                        { name: "doc", type: 'hidden', text: "内容", validate: 'required', value: ue.getContent() }
+                    ]).print();
+                },
+                command: [{
+                    cmd: '确定', ngclick: function () {
+                        var d = ExcelEdForm.getdata();
+                        if (ExcelEdForm.validate) {
+                            if (id.length == 0) {
+                                MyGrid.Add(d, function () { ExcelEdModel.hide(); });
+                            } else {
+                                MyGrid.Update(d, function () { ExcelEdModel.hide(); });
+                            }
+                        }
+                    }
+                },
+                { cmd: '取消', ngclick: function () { this.model().hide(); } }]
+            }).show();
+        }
+
+        $nd.ndgrid('MyGrid', 'dbsqlx/operation?name=AppDoc').bind(
+        {
+            autoheight: false,
+            showsearch: false,
+            height: 200 + 'px',
+            columns: [
+                { name: "docname", text: "存档名称", visble: true },
+                { name: "docdesc", text: "存档描述", visble: true },
+                { name: "setdate", text: "存档时间", visble: true },
+                { name: "setby", text: "存档人", visble: true }
+            ],
+            command: [
+                {
+                    cmd: '查看', ngclick: function (rc) {
+                        id = rc.id;
+                        e = { docname: rc.docname, docdesc: rc.docdesc };
+                        UE.getEditor('doc').setContent(rc.doc);
+                    }
+                },
+                {
+                    cmd: '删除', ngclick: function (r) {
+                        if (confirm('确定要删除么，删除不可恢复')) {
+                            MyGrid.Delete(r);
+                        }
+                    }
+                }
+            ]
+        }).bindsearch([{ name: "app", type: "input", text: "应用", value: app }]).refresh();
+    </script>
+</div>

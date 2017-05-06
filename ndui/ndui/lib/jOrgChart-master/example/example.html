@@ -1,0 +1,78 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+    <title>jOrgChart - A jQuery OrgChart Plugin</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/jquery.jOrgChart.css" />
+    <link rel="stylesheet" href="css/custom.css" />
+    <link href="css/prettify.css" type="text/css" rel="stylesheet" />
+    <script type="text/javascript" src="prettify.js"></script>
+
+    <!-- jQuery includes -->
+    <script type="text/html" id="org">
+        <ul>
+            {{name}}
+            {{if child&child.length>0}}
+            {{#o}}
+            {{/if}}
+        </ul>
+    </script>
+    <script src="../../jquery-1.11.2.min.js"></script>
+    <script src="../../jquery-ui-1.12.1.custom/jquery-ui.min.js"></script>
+    <script src="jquery.jOrgChart.js"></script>
+    <script src="../../template.js"></script>
+    <script>
+        jQuery(document).ready(function () {
+            $("#org").jOrgChart({
+                chartElement: '#chart',
+                dragAndDrop: true
+            });
+        });
+    </script>
+</head>
+<body onload="prettyPrint();">
+    <ul id="org" style="display:none">
+        <li>
+            管理服务部
+            <ul>
+                <li id="beer">IT1科</li>
+                <li>
+                    Vegetables
+                    <ul>
+                        <li>Pumpkin</li>
+                    </ul>
+                </li>
+                <li class="fruit">
+                    Fruit
+                    <ul>
+                        <li>
+                            Apple
+                            <ul>
+                                <li>Granny Smith</li>
+                            </ul>
+                        </li>
+                        <li>
+                            Berries
+                            <ul>
+                                <li>Blueberry</li>
+                                <li><img src="images/raspberry.jpg" alt="Raspberry" /></li>
+                                <li>Cucumber</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+                <li>Bread</li>
+                <li class="collapsed">
+                    Chocolate
+                    <ul>
+                        <li>Topdeck</li>
+                        <li>Reese's Cups</li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+    </ul>
+    <div id="chart" class="orgChart"></div>
+</body>
+</html>

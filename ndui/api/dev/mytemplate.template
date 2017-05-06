@@ -1,0 +1,22 @@
+﻿<!-- #include file="../../cap/master/page/page_start.html" -->
+<div ng-include="'<%=@nd.Site.Url%>/cap/controls/ndgridx?name=MyGrid'"></div>
+<script>
+		app.controller('MyController', function ($scope) {
+		  $scope.page = { title: '菜单名称', app: '系统名称' }
+			//Arrays
+<#[CDATA[Arrays]]#>					    
+
+			//页面注册主函数 放置其它操作之前
+            GridSetting($scope, "<#[CDATA[SqlPath]]#>", 'MyGrid').bind({
+				columns :<#[CDATA[Colums]]#>,
+				toolbar :<#[CDATA[Toolbar]]#>,
+				command :<#[CDATA[Command]]#>
+			}).searchSetting(
+				[
+<#[CDATA[SearchA]]#>
+				],[
+<#[CDATA[SearchB]]#>
+				]).refresh();
+        });
+</script>
+<!-- #include file="../../cap/master/page/page_end.html" -->

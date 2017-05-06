@@ -1,0 +1,40 @@
+﻿
+<p>
+    <select title="Basic example" multiple="multiple" name="example-basic" size="5">
+        <option value="option1">Option 1</option>
+        <option value="option2">Option 2</option>
+        <option value="option3">Option 3</option>
+        <option value="option4">Option 4</option>
+        <option value="option5">Option 5</option>
+        <option value="option6">Option 6</option>
+        <option value="option7">Option 7</option>
+        <option value="option8">Option 8</option>
+        <option value="option9">Option 9</option>
+        <option value="option10">Option 10</option>
+        <option value="option11">Option 11</option>
+        <option value="option12">Option 12</option>
+    </select>
+</p>
+<input id="spinner" name="value">
+<select name="speed" id="speed">
+
+    <option>Slower</option>
+
+    <option>Slow</option>
+
+    <option selected="selected">Medium</option>
+
+    <option>Fast</option>
+
+    <option>Faster</option>
+
+</select>
+
+
+<script type="text/javascript">
+    $(function () {
+        $("select").multiselect();
+        var spinner = $("#spinner").spinner();
+        $("#speed").selectmenu();
+    });
+</script>

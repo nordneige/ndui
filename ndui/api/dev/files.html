@@ -1,0 +1,414 @@
+﻿<div class="container-fluid" style="margin-top:10px;">
+    <div class="row-fluid">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <div class="pull-left">
+                    <input class="btn btn-warning btn2" ng-click="getbasedate()" type="submit" value="主菜单" />
+                    <input class="btn btn-warning btn2" ng-click="getrecycle()" type="submit" value="回收站" />
+                    <a ng-if="DirectoriesModel.FullNameStr!='C:'" class="btn btn-warning btn2" href="#myModal" role="button" ng-click="resetMybtnClick(r)" data-toggle="modal">重命名</a>
+                    <span ng-if="!isie8" class="btn btn-warning btn2 fileinput-button">
+                        <i class="icon-plus icon-white"></i>
+                        <span>上传文件</span>
+                        <input id="fileupload" data-backdrop="static" onchange="window.var ndupload(0, '#fileupload','')" type="file" name="files[]">
+                    </span>
+                    <input ng-if="isie8" class="btn btn-warning btn2" ng-click="uploadfile()" type="button" value="上传文件" />
+                    <input class="btn btn-warning btn2" ng-click="getbasedate()" type="submit" value="选项" />
+                    <input class="btn btn-warning btn2" ng-click="refashClick()" type="submit" value="刷新" />
+                    <input class="btn btn-warning btn2" ng-click="addFileClick()" type="submit" value="新建文件夹" />
+                    <input ng-if="Paste&&(!DirectoriesModel.FullName.startsWith(Move.Model.FullName))" class="btn btn-warning btn2" ng-click="PasteClick()" type="submit" value="粘贴" />
+                </div>
+                <div class="pull-right actions btn-group">
+                    <input ng-if="DirectoriesModel.FullNameStr!='C:'" class="btn btn-warning btn2" ng-click="parentClick()" type="submit" value="返回上一级" />
+                </div>
+            </div>
+            <div class="panel-body">
+                <table id="da" class="table">
+                    <thead>
+                        <tr>
+                            <th class="sorting">名称</th>
+                            <th class="sorting_desc">修改时间</th>
+                            <th class="sorting">类型</th>
+                            <th class="sorting"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-style="{color:r.Hiddened ?'red':'default' }" ng-repeat="r in DirectoriesModel.Diretories">
+                            <td style="cursor:pointer" ng-click="ViewClick(r)"><i class="glyphicon glyphicon-folder-open"></i>&nbsp;{{r.Name}}</td>
+                            <td>{{r.LastWriteTime}}</td>
+                            <td ng-bind="r.Type=='Dir' ?'':r.Extension"></td>
+                            <td>
+                                <a class="btn btn-mini btn-danger" ng-click="DeleteDirectory(r)">回收</a>
+                                <a class="btn btn-mini btn-danger" href="#myModal" role="button" ng-click="resetAllClick(r)" data-toggle="modal">更多...</a>
+                            </td>
+                        </tr>
+                        <tr ng-style="{color:r.Hiddened ?'red':'default' }" ng-repeat="r in DirectoriesModel.Files">
+                            <td ng-click="r.Type=='Dir'? ViewClick(r):''"><i class="glyphicon glyphicon-file"></i>&nbsp;{{r.Name}}</td>
+                            <td>{{r.LastWriteTime}}</td>
+                            <td></td>
+                            <td>
+                                <a class="btn btn-mini btn-danger" ng-click="OpenClick(r)">查看</a>
+                                <a class="btn btn-mini btn-danger" ng-click="DeleteClick(r)">回收</a>
+                                <a class="btn btn-mini btn-danger" ng-click="ViewClick(r)">下载</a>
+                                <a class="btn btn-mini btn-danger" href="#myModal" role="button" ng-click="resetAllClick(r)" data-toggle="modal">更多...</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal large fade modalloading" data-backdrop="static" id="UploadModal" tabindex="-1" role="dialog" aria-labelledby="UploadModalLabel" aria-hidden="false">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" style="margin-top:0px;padding:0px;">
+            <div class="progress" style="margin-top:0px;padding:0px;">
+                <div class="progress-bar padding_clear margin-clear progress-bar-success" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" ng-style="{'width':progress}">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade w1200" id="ViewModal" tabindex="-1" role="dialog" aria-labelledby="ViewModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="PersonSelectModalLable">查看</h4>
+            </div>
+            <div class="modal-body" style="padding: 10px; height: 300px; overflow-y: auto" ng-bind="ViewTxt">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade w1200" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h3 id="myModalLabel">操作选项</h3>
+            </div>
+            <div ng-if="edite" class="modal-body">
+                <a class="btn btn-mini btn-danger" ng-click="Del2eteClick(r)">锁定</a>
+                <a class="btn btn-mini btn-danger" ng-click="moveClick(r)">移动到</a>
+                <a class="btn btn-mini btn-danger" ng-click="resetbtnClick()">重命名</a>
+                <a class="btn btn-mini btn-danger" ng-click="Dele2teClick(r)">加密</a>
+                <a class="btn btn-mini btn-danger" ng-click="Dele2teClick(r)">播放</a>
+                <a class="btn btn-mini btn-danger" ng-click="Dele2teClick(r)">分享</a>
+            </div>
+            <div ng-if="resetName" class="modal-body">
+                <input type="text" class="form-control" ng-model="EditeModel.Name" />
+            </div>
+            <div ng-if="resetMyName" class="modal-body">
+                <input type="text" class="form-control" ng-model="DirectoriesModel.Name" />
+            </div>
+            <div class="modal-footer">
+                <button ng-if="resetMyName" class="btn" data-dismiss="modal" ng-click="ResetMyDirName()" aria-hidden="true">确定</button>
+                <button ng-if="resetName" class="btn" data-dismiss="modal" ng-click="ResetDirName()" aria-hidden="true">确定</button>
+                <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+        app.set({ title: '文件系统', app: '系统维护文档管理' });
+
+        var search = { pageindex: 0, pagesize: 10, orderby: "", startdate: "", enddate: "" };
+
+        var basepath = '<%=ConfigurationManager.AppSettings["FilePlace"]%>';
+        var recycle = '<%=ConfigurationManager.AppSettings["CacheFiles"]%>';
+        var path = "";
+        var DirectoriesModel = {};
+
+        var isie8 = $nd.getIEVersion() == 'IE8';
+
+        var EditeModel = {};
+
+        var resetName = false;
+        var edite = true;
+        var resetMyName = false;
+
+        var resetAllClick = function (r) {
+            var resetName = false;
+            var edite = true;
+            var resetMyName = false;
+            var EditeModel = r;
+        }
+
+        var uploadfile = function () {
+            var fid = $nd.guid();
+            NdMakeModal($scope,'MyModel').bind({
+                src: '<%=@nd.Site.Url%>/cap/controls/fileupload?key=' + var DirectoriesModel.ID + '&fid=' + fid,
+                title: '上传数据',
+                width: 300,
+                height: 200,
+                data: fid,
+                ColseName: '取消',
+                Click: function (model) {
+                    var file = NordNeige.Files.FileHanders.GetFile(model.data);
+                    if (file.success) {
+                        var ViewClick(var DirectoriesModel);
+                        model.hide();
+                    }
+                }
+            }).show();
+        }
+
+        var resetbtnClick = function () {
+            var resetName = true;
+            var edite = false;
+            var resetMyName = false;
+        }
+
+        var resetMybtnClick = function () {
+            var resetName = false;
+            var edite = false;
+            var resetMyName = true;
+        }
+
+        var parentClick = function () {
+            NordNeige.Core.Web.HttpHandlers.FileHanders.GetDirectories([var DirectoriesModel.ParentID], function (d) {
+                if (d.success) {
+                    $nd.$apply($scope, function () {
+                        var DirectoriesModel = d.data;
+                    });
+                }
+            });
+        }
+
+        var ResetMyDirName = function (r) {
+            NordNeige.Core.Web.HttpHandlers.FileHanders.ResetDirName(var DirectoriesModel, function (d) {
+                if (d.success) {
+                    var ViewClick(var DirectoriesModel);
+                } else {
+                    alert(d.message);
+                }
+            });
+        }
+
+        var ResetDirName = function (r) {
+            if (var EditeModel.FieldID) {
+                NordNeige.Core.Web.HttpHandlers.FileHanders.ResetFileName(var EditeModel, function (d) {
+                    if (d.success) {
+                        var ViewClick(var DirectoriesModel);
+                    } else {
+                        alert(d.message);
+                        var ViewClick(var DirectoriesModel);
+                    }
+                });
+            } else {
+                NordNeige.Core.Web.HttpHandlers.FileHanders.ResetDirName(var EditeModel, function (d) {
+                    if (d.success) {
+                        var ViewClick(var DirectoriesModel);
+                    } else {
+                        alert(d.message);
+                        var ViewClick(var DirectoriesModel);
+                    }
+                });
+            }
+        }
+
+        //根目录
+        var getbasedate = function () {
+            var gedata(var basepath);
+        }
+
+        //回收文件
+        var DeleteClick = function (r) {
+            if (confirm('确定要回收么？')) {
+                NordNeige.Core.Web.HttpHandlers.FileHanders.DeleteDirectoryFile([r.FieldID], function (r) {
+                    var ViewClick(var DirectoriesModel);
+                })
+            }
+        }
+
+
+        //回收文件
+        var DeleteDirectory = function (r) {
+            if (confirm('确定要回收么？')) {
+                NordNeige.Core.Web.HttpHandlers.FileHanders.DeleteDirectory([r.ID], function (r) {
+                    var ViewClick(var DirectoriesModel);
+                })
+                //if (data.length > 0) {
+                //    var ViewClick(var DirectoriesModel);
+                //}
+            }
+        }
+
+        ///回收站
+        var getrecycle = function () {
+            var gedata(var recycle);
+        }
+
+        //打开文件
+        var OpenClick = function (r) {
+            if (r.Name.endsWith('.txt') || r.Name.endsWith('.sql')) {
+                NordNeige.Core.Web.HttpHandlers.FileHanders.ViewTxt(r, function (r) {
+                    if (r.success) {
+                        $nd.$apply($scope, function () {
+                            var ViewTxt = r.data;
+                            $('#ViewModal').modal('show');
+                        });
+                    } else {
+                        alert('读取文件失败，请尝试下载文件进行查看');
+                    }
+                });
+
+            } else {
+                window.open("<%=@nd.Site.Url%>/Upload/" + r.FieldID + '/' + r.Name);
+            }
+        }
+
+        var progress = 0;
+
+        var ndupload = function (i, f, fid) {
+
+
+            if (i == 0) {
+                $nd.$apply($scope, function () {
+                    var progress = 0;
+                });
+                $('#UploadModal').modal('show');
+            }
+            var form = new FormData();
+            var file = $(f)[0].files[0],
+                    name = file.name,
+                    size = file.size,
+                    succeed = 0;
+            var shardSize = 4 * 1024 * 1024,
+                shardCount = Math.ceil(size / shardSize);
+
+            var start = i * shardSize,
+                end = Math.min(size, start + shardSize);
+            form.append("data", file.slice(start, end));
+            form.append("name", name);
+            form.append("fid", fid);
+            form.append("total", shardCount);
+
+            form.append("key", var DirectoriesModel.ID);
+            form.append("index", i + 1);
+            $.ajax({
+                url: '../../NordNeige/Files/FileHanders?nd-method=DoWork&key=' + var DirectoriesModel.ID,
+                type: "POST",
+                data: form,
+                async: true,
+                processData: false,
+                contentType: false,
+                success: function (result) {
+                    $nd.$apply($scope, function () {
+                        var progress = parseInt((i + 1) * 100 / shardCount) + '%';
+                    });
+                    if ((i + 1) < shardCount) {
+                        var ndupload(++i, f, result.data);
+                    } else {
+                        if ((i + 1) >= shardCount) {
+                            $nd.$apply($scope, function () {
+                                var progress = 0;
+                            });
+                            $('#UploadModal').modal('hide');
+                            var ViewClick(var DirectoriesModel);
+                        }
+                    }
+                },
+                error: function () {
+                    $nd.$apply($scope, function () {
+                        var progress = 0;
+                    });
+                    $('#UploadModal').modal('hide');
+                    alert('上传失败！');
+                }
+            });
+        }
+
+        //查看目录
+        function (r) ViewClick{
+            NordNeige.Core.Web.HttpHandlers.FileHanders.GetDirectories([r.ID], function (d) {
+                if (d.success) {
+                    $nd.$apply($scope, function () {
+                        var DirectoriesModel = d.data;
+                    });
+                }
+            });
+        }
+
+        //新建文件夹
+       function () addFileClick{
+            NordNeige.Core.Web.HttpHandlers.FileHanders.AddDirectories([var DirectoriesModel.ID, "新建文件夹"], function (d) {
+                if (d.success) {
+                    $nd.$apply($scope, function () {
+                        var ViewClick(var DirectoriesModel);
+                    });
+                }
+            });
+        }
+
+        //刷新
+        function refashClick() {
+             ViewClick(var DirectoriesModel);
+        }
+
+         function gedata(a) {
+            if (a) var path = a;
+            NordNeige.Core.Web.HttpHandlers.FileHanders.GetMain(null, function (d) {
+                if (d.success) {
+                    $nd.$apply($scope, function () {
+                         DirectoriesModel = d.data;
+                    });
+                }
+            });
+        }
+
+        var Move = {
+            Type: 'file'
+        };
+
+        //粘贴
+        var PasteClick = function () {
+            if (var Move.Type == 'file') {
+                NordNeige.Core.Web.HttpHandlers.FileHanders.MoveFile([var DirectoriesModel, var Move.Model], function (r) {
+                    if (r.success) {
+                        var ViewClick(var DirectoriesModel);
+                        var Paste = false;
+                    } else {
+                        alert(r.message);
+                    }
+                });
+            }
+            if (var Move.Type == 'dir') {
+                NordNeige.Core.Web.HttpHandlers.FileHanders.MoveDir([var DirectoriesModel, var Move.Model], function (r) {
+                    if (r.success) {
+                        var ViewClick(var DirectoriesModel);
+                        var Paste = false;
+                    } else {
+                        alert(r.message);
+                    }
+                });
+            }
+        }
+
+        //移动
+        var moveClick = function (r) {
+            if (var EditeModel.FieldID) {
+                //var EditeModel.FullName = var DirectoriesModel.FullName;
+                var Move = {
+                    Type: 'file',
+                    Model: var EditeModel
+                };
+            } else {
+                var Move = {
+                    Type: 'dir',
+                    Model: var EditeModel
+                };
+            }
+
+            var Paste = true;
+            $('#myModal').modal('hide');
+
+        }
+
+        gedata(var basepath);
+</script>
+

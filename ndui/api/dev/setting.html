@@ -1,0 +1,73 @@
+﻿<div class="container-fluid">
+    <div class="row">
+        <div class="btn-toolbar">
+            <button ng-click="saveClick()" class="btn btn-primary"><i class="icon-save"></i> 保存</button>
+            <a href="#myModal" data-toggle="modal" class="btn">取消</a>
+            <div class="btn-group">
+            </div>
+        </div>
+        <div class="well">
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="#home" data-toggle="tab">基本信息</a></li>
+                <li><a href="#profile" data-toggle="tab">功能设定</a></li>
+            </ul>
+            <div id="myTabContent" class="tab-content">
+                <div class="tab-pane active in" id="home">
+                    <div class="form-horizontal" style="padding:10px">
+                        <div id="Site"></div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="profile">
+                    <div class="form-horizontal" style="padding:10px">
+                        <div id="Site2"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+            app.set({ app: '系统管理', title: '网站设置' });
+            var option = [{ value: '0', text: '已关闭' }, { value: '1', text: '工作中' }, { value: '2', text: '维护中' }];
+
+            $nd.ndform('Site').bind({ nopanel: true }).setdata([
+                { name: 'WebName', type: 'input', text: '网站名称', validate: 'required', value: '<%=@nd.Site.WebName%>' },
+                { name: 'WebTel', type: 'input', text: '联系电话', validate: 'required', value: '<%=@nd.Site.WebTel%>' },
+                { name: 'WebFax', type: 'input', text: '传真', validate: 'required', value: '<%=@nd.Site.WebFax%>' },
+                { name: "WebEmail", type: "input", text: "Email", value: '<%=@nd.Site.WebEmail%>', validate: 'required' },
+                { name: "WebCrod", type: "input", text: "备案号", value: "<%=@nd.Site.WebCrod%>" },
+                { name: "WebKeywords", type: "input", text: "关键字", value: "<%=@nd.Site.WebKeywords%>" },
+                { name: "WebCopyright", type: "input", text: "版权信息", value: "<%=@nd.Site.WebCopyright%>" },
+                { name: "WebDescription", type: "textarea", text: "描述信息", value: "<%=@nd.Site.WebDescription%>" }
+            ]).print();
+
+            $nd.ndform('Site2').bind({ nopanel: true }).setdata([
+                { name: 'WebSite', type: 'radiolist', text: '状态设定', validate: 'required', value: '<%=@nd.Site.WebSite%>', data: option },
+                { name: 'RepairUrl', type: 'input', text: '维护显示页', validate: 'required', value: '<%=@nd.Site.RepairUrl%>' },
+                { name: 'LoginUrl', type: 'input', text: '登录页', validate: 'required', value: '<%=@nd.Site.LoginUrl%>' },
+                { name: 'CacheToDb', type: 'input', text: '缓存数据库', validate: 'required', value: '<%=@nd.Site.CacheToDb%>' },
+                { name: "WebFileSize", type: "input", text: "上传文件大小控制", value: '<%=@nd.Site.WebFileSize%>', validate: 'required' },
+                { name: "WebLogStatus", type: "radiolist", text: "网站日志", value: "<%=@nd.Site.WebLogStatus%>", data: [{ text: "开启", value: '1' }, { text: "关闭", value: '0' }] },
+                { name: "WebTask", type: "radiolist", text: "轻任务", value: "<%=@nd.Site.WebTask%>", data: [{ text: "开启", value: '1' }, { text: "关闭", value: '0' }] },
+                { name: "MustRoute", type: "radiolist", text: "强制路由", value: "<%=@nd.Site.MustRoute%>", data: [{ text: "开启", value: '1' }, { text: "关闭", value: '0' }] },
+                { name: "Verification", type: "radiolist", text: "权限验证", value: "<%=@nd.Site.Verification%>", data: [{ text: "开启", value: '1' }, { text: "关闭", value: '0' }] },
+                { name: "FilePath", type: "magicSuggest", split: '|', text: "文件目录", value: '<%=@nd.Site.FilePath%>', validate: 'required' },
+                { name: "WebFileType", type: "magicSuggest", split: '|', text: "上传文件格式限制", value: "<%=@nd.Site.WebFileType%>" },
+                { name: "RoutePage", type: "magicSuggest", split: '|', text: "自动识别路由文件类型", value: "<%=@nd.Site.RoutePage%>" },
+                { name: "RouteFiles", type: "magicSuggest", split: '|', text: "自动识别路由目录", value: "<%=@nd.Site.RouteFiles%>" }
+            ]).print();
+
+          function saveClick() {
+                    var SiteModel = {};
+                    for (var c = 0; c < $scope.Site.length; c++) { SiteModel[$scope.Site[c].name] = $scope.Site[c].value; }
+                    for (var c = 0; c < $scope.Site2.length; c++) { SiteModel[$scope.Site2[c].name] = $scope.Site2[c].value; }
+                    NordNeige.Core.Web.HttpHandlers.BaseHandler.SaveSite(SiteModel, function (r) {
+                        if (r.success) {
+                            alert('保存成功！');
+                            location.reload();
+                        } else {
+                            alert(r.message)
+                        }
+                    });
+                };
+        </script>
+    </div>
+</div>

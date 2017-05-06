@@ -1,0 +1,30 @@
+﻿<script>
+    app.set({ app: '系统管理', title: '页面路由' });
+    NordNeige.Core.Web.HttpHandlers.DeveloperHandler.GetTask(null, function (r) {
+        if (r.success) {
+            for (var i = 0; i < r.data.length; i++) {
+                r.data[i].RowNumber = i + 1;
+            }
+            $nd.ndgrid('MyGrid', '').bind({
+                columns: [
+                   { text: '任务名称', name: 'name', visble: true },
+                   { text: '时间配置', name: 'config', visble: true },
+                   { text: '任务处理单元', name: 'hander', visble: true, showlength: 100 },
+                   { text: '描述信息', name: 'desc', visble: true }
+                ],
+                showfooter: false,
+                showcolumnset: false,
+                showsearch: false,
+                showtoolbar: false,
+                data:r.data,
+                toolbar: [{ value: '导出', ngclick: function () { MyGrid.excel("数据.xlsx"); } }],
+                command: [{ cmd: '查看', ngclick: function (r) { MyGrid.showView(r); } }]
+            }).bindsearch([{ "name": "name", "type": "input", "text": "任务名称", "value": "" }]).print();
+        }
+        else {
+            alert(r.message);
+        }
+
+        $("#LoadingModal").modal('hide');
+    });
+</script>

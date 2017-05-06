@@ -1,0 +1,82 @@
+﻿<!-- #include file="../../ndui/master/page/page_start.html" -->
+<script src="../lib/viewer.js"></script>
+<link href="../lib/viewer.css" rel="stylesheet" />
+<form id="form1" style="padding:10px" method="post" enctype="multipart/form-data" action='fileupload.ud?nd-method=DoWork&key=<%=@nd.pama("key")%>&back=response'>
+    <table>
+        <tr>
+            <td colspan="2">
+                <input type="file" class="form-control" name="data" id="data" style="display:inline" />
+                <input style="margin-left:10px;display:inline;margin-top:-10px" class="btn btn-default" type="submit" value="上传" />
+                <input type="hidden" id="total" name="total" value="1" />
+                <input type="hidden" id="fid" name="fid" value='<%=@nd.pama("fid")%>' />
+                <input type="hidden" id="index" name="index" value="1" />
+            </td>
+        </tr>
+        <tr id="Info" style="display:none">
+            <td colspan="2" style="text-align:center;padding:9px">
+                <a href='<%=@nd.Site.Url%>/Upload/<%=@nd.pama("fid")%>/<%=@nd.pama("name")%>?ndfile=true'>
+                    <img height="100" alt='<%=@nd.pama("name")%>' id="src" src="" />
+                </a>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" style="text-align:center">
+                <a href='<%=@nd.Site.Url%>/Upload/<%=@nd.pama("fid")%>/<%=@nd.pama("name")%>?ndfile=true' target="_blank"><%=@nd.pama("name")%></a>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" id="mes"></td>
+        </tr>
+    </table>
+</form>
+<script>
+    $(function () {
+        var mes = '<%=@nd.pama("mes")%>';
+        if (mes.length > 0) {
+            alert(mes);
+        }
+
+        var name = '<%=@nd.pama("name")%>';
+        var filepath = name.substring(name.lastIndexOf('.'), name.length).toLocaleLowerCase();
+        var src = "<%=@nd.Site.Url%>/ndui/images/file/empty.png";
+        if ('.png|.jpg|.gif'.indexOf(filepath) > -1) {
+            src = '<%=@nd.Site.Url%>/Upload/<%=@nd.pama("fid")%>' + filepath;
+            $('#src').viewer();
+        }
+
+        if ('.pdf'.indexOf(filepath) > -1) {
+            src = "<%=@nd.Site.Url%>/ndui/images/file/pdf.png";
+        }
+
+        if ('.xls|.xlsx'.indexOf(filepath) > -1) {
+            src = "<%=@nd.Site.Url%>/ndui/images/file/excel.png";
+        }
+
+        if ('.doc|.docx'.indexOf(filepath) > -1) {
+            src = "<%=@nd.Site.Url%>/ndui/images/file/word.png";
+        }
+        if ('.txt'.indexOf(filepath) > -1) {
+            src = "<%=@nd.Site.Url%>/ndui/images/file/text.png";
+        }
+
+        if ('.mp4|.wmv|.avi'.indexOf(filepath) > -1) {
+            src = "<%=@nd.Site.Url%>/ndui/images/file/movie.png";
+        }
+
+        if ('.mp3'.indexOf(filepath) > -1) {
+            src = "<%=@nd.Site.Url%>/ndui/images/file/music.png";
+        }
+
+
+        $('#fid').val('<%=@nd.pama("fid")%>');
+        $('#src').attr('src', src);
+        if ('<%=@nd.pama("response")%>' == 1) {
+            $('#Info').show();
+            window.name = $('#fid').val() + '|' + name;
+        } else {
+            window.name = '';
+        };
+    });
+</script>
+
+<!-- #include file="../../ndui/master/page/page_end.html" -->

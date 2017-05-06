@@ -1,0 +1,680 @@
+﻿<script id="input" type="text/html" ndui>
+    <div ndid="{{ndid}}_box" class="form-group {{validatetime>0?(haserror?'has-error':'has-success'):''}}" title="{{title}}" style="width:{{width}}">
+        <input {{disabled?'disabled':''}} {{cname!=''?('id='+cname+' name='+cname):''}} ndid="{{ndid}}" placeholder="{{placeholder}}" title="{{title}}" value="{{value}}" style="width:{{width}}" class="form-control" type="text" />
+        {{if haserror}}
+        <span class="control-label has-error">{{error}}</span>
+        {{/if}}
+    </div>
+</script>
+<script id="spinner" type="text/html" ndui>
+    <div ndid="{{ndid}}_box" class="form-group {{validatetime>0?(haserror?'has-error':'has-success'):''}}" title="{{title}}" style="width:{{width}}">
+        <input {{disabled?'disabled':''}} {{cname!=''?('id='+cname+' name='+cname):''}} placeholder="{{placeholder}}" ndid="{{ndid}}" title="{{title}}" value="{{value}}" style="width:{{width}}" class="form-control" type="text" />
+        {{if haserror}}
+        <span class="control-label has-error">{{error}}</span>
+        {{/if}}
+    </div>
+</script>
+<script id="orgtree" type="text/html" ndui>
+    <div ndid="{{ndid}}_box" class="form-group {{validatetime>0?(haserror?'has-error':'has-success'):''}}" title="{{title}}" style="width:{{width}}">
+        <div ndid="{{ndid}}_treebox" style="width:{{width}}" class="input-group">
+            <input type="hidden" value="{{value}}" ndid="{{ndid}}" />
+            <input {{disabled?'disabled':''}} {{cname!=''?('id='+cname+' name='+cname):''}} placeholder="{{placeholder}}" ndid="{{ndid}}_label" class="form-control" type="text" value="{{label}}" />
+            <span class="input-group-addon pointer" ndid="{{ndid}}_ico">
+                <span class="glyphicon glyphicon-th"></span>
+            </span>
+        </div>
+        {{if haserror}}
+        <span class="control-label has-error">{{error}}</span>
+        {{/if}}
+    </div>
+</script>
+<script id="ndmodelgrid" type="text/html" ndui>
+    <div ndid="{{ndid}}_box" class="form-group {{validatetime>0?(haserror?'has-error':'has-success'):''}}" title="{{title}}" style="width:{{width}}">
+        <div ndid="{{ndid}}_gridbox" style="width:{{width}}" class="input-group">
+            <input type="hidden" value="{{value}}" ndid="{{ndid}}" />
+            <input {{disabled?'disabled':''}} {{cname!=''?('id='+cname+' name='+cname):''}} placeholder="{{placeholder}}" ndid="{{ndid}}_label" class="form-control" type="text" value="{{label}}" />
+            <span class="input-group-addon pointer" ndid="{{ndid}}_ico">
+                <span class="glyphicon glyphicon-th"></span>
+            </span>
+        </div>
+        {{if haserror}}
+        <span class="control-label has-error">{{error}}</span>
+        {{/if}}
+    </div>
+</script>
+<script id="persontree" type="text/html" ndui>
+    <div ndid="{{ndid}}_box" class="form-group {{validatetime>0?(haserror?'has-error':'has-success'):''}}" title="{{title}}" style="width:{{width}}">
+        <div ndid="{{ndid}}_treebox" style="width:{{width}}" class="input-group">
+            <input type="hidden" value="{{value}}" ndid="{{ndid}}" />
+            <input {{disabled?'disabled':''}} {{cname!=''?('id='+cname+' name='+cname):''}} placeholder="{{placeholder}}" ndid="{{ndid}}_label" class="form-control" type="text" value="{{label}}" />
+            <span class="input-group-addon pointer" ndid="{{ndid}}_ico">
+                <span class="glyphicon glyphicon-th"></span>
+            </span>
+        </div>
+        {{if haserror}}
+        <span class="control-label has-error">{{error}}</span>
+        {{/if}}
+    </div>
+</script>
+<script id="money" type="text/html" ndui>
+    <div ndid="{{ndid}}_box" class="form-group {{validatetime>0?(haserror?'has-error':'has-success'):''}}" title="{{title}}" style="width:{{width}}">
+        <input type="hidden" value="{{value}}" ndid="{{ndid}}" />
+        <input {{disabled?'disabled':''}} {{cname!=''?('id='+cname+' name='+cname):''}} placeholder="{{placeholder}}" ndid="{{ndid}}_label" title="{{title}}" value="{{getmoney()}}" style="width:{{width}}" class="form-control" type="text" />
+        {{if haserror}}
+        <span class="control-label has-error">{{error}}</span>
+        {{/if}}
+    </div>
+</script>
+<script id="select" type="text/html" ndui>
+    <div ndid="{{ndid}}_box" class="form-group {{validatetime>0?(haserror?'has-error':'has-success'):''}}" title="{{title}}" style="width:{{width}}">
+        <select {{disabled?'disabled':''}} ndid="{{ndid}}" {{cname!=''?('id='+cname+' name='+cname):''}} class="form-control" style="width:{{width}}">
+            {{each options as opt i}}
+            <option {{opt.value==value?'selected':''}} value="{{opt.value}}">{{opt.text}}</option>
+            {{/each}}
+        </select>
+        {{if haserror}}
+        <span class="control-label has-error">{{error}}</span>
+        {{/if}}
+    </div>
+</script>
+<script id="multiselect" type="text/html" ndui>
+    <div ndid="{{ndid}}_box" class="form-group {{validatetime>0?(haserror?'has-error':'has-success'):''}}" title="{{title}}" style="width:{{width}}">
+        <select {{disabled?'disabled':''}} ndid="{{ndid}}" {{cname!=''?('id='+cname+' name='+cname):''}}  size="5"  multiple="multiple"  class="form-control" style="width:{{width}}">
+            {{each options as opt i}}
+            <option {{opt.value==value?'selected':''}} value="{{opt.value}}">{{opt.text}}</option>
+            {{/each}}
+        </select>
+        {{if haserror}}
+        <span class="control-label has-error">{{error}}</span>
+        {{/if}}
+    </div>
+</script>
+<script id="hidden" type="text/html" ndui>
+    <div ndid="{{ndid}}_box" class="form-group {{validatetime>0?(haserror?'has-error':'has-success'):''}}" title="{{title}}" style="width:{{width}}">
+        <input {{disabled?'disabled':''}} {{cname!=''?('id='+cname+' name='+cname):''}} ndid="{{ndid}}" title="{{title}}" value="{{value}}" style="width:{{width}}" class="form-control" type="hidden" />
+        {{if haserror}}
+        <span class="control-label has-error">{{error}}</span>
+        {{/if}}
+    </div>
+</script>
+<script id="label" type="text/html" ndui>
+    <div ndid="{{ndid}}_box" class="form-group {{validatetime>0?(haserror?'has-error':'has-success'):''}}" title="{{title}}" style="width:{{width}}">
+        <span {{cname!=''?('id='+cname+' name='+cname):''}} ndid="{{ndid}}">{{value}}</span>
+        {{if haserror}}
+        <span class="control-label has-error">{{error}}</span>
+        {{/if}}
+    </div>
+</script>
+<script id="textarea" type="text/html" ndui>
+    <div ndid="{{ndid}}_box" class="form-group {{validatetime>0?(haserror?'has-error':'has-success'):''}}" title="{{title}}" style="width:{{width}}">
+        <textarea class="form-control" {{cname!=''?('id='+cname+' name='+cname):''}} placeholder="{{placeholder}}" ndid="{{ndid}}" rows="{{rows}}" style="width:{{width}}">{{value}}</textarea>
+        {{if haserror}}
+        <span class="control-label has-error">{{error}}</span>
+        {{/if}}
+    </div>
+</script>
+<script id="checkbox" type="text/html" ndui>
+    <div ndid="{{ndid}}_box" class="form-group {{validatetime>0?(haserror?'has-error':'has-success'):''}}" title="{{title}}" style="width:{{width}}">
+        <input {{disabled?'disabled':''}} {{cname!=''?('id='+cname+' name='+cname):''}} ndid="{{ndid}}" title="{{title}}" {{value?'checked="checked"':''}} type="checkbox" />
+        {{if haserror}}
+        <span class="control-label has-error">{{error}}</span>
+        {{/if}}
+    </div>
+</script>
+<script id="radiolist" type="text/html" ndui>
+    <div ndid="{{ndid}}_box" class="form-group {{validatetime>0?(haserror?'has-error':'has-success'):''}}" title="{{title}}" style="width:{{width}}">
+        {{each data as d i}}
+        <div style="display:inline;width:180px">
+            <input type="radio" name="{{ndid+'_radio'}}" value="{{d.value}}" /><span>{{d.text}}</span>
+        </div>
+        {{/each}}
+        {{if haserror}}
+        <span class="control-label has-error">{{error}}</span>
+        {{/if}}
+    </div>
+</script>
+<script id="checkboxlist" type="text/html" ndui>
+    <div ndid="{{ndid}}_box" class="form-group {{validatetime>0?(haserror?'has-error':'has-success'):''}}" title="{{title}}" style="width:{{width}}">
+        {{each data as d i}}
+        <div style="display:inline;width:180px" class="checkbox">
+            <input type="checkbox" name="{{ndid+'_checkbox'}}" value="{{d.value}}" /><span>{{d.text}}</span>
+        </div>
+        {{/each}}
+        {{if haserror}}
+        <span class="control-label has-error">{{error}}</span>
+        {{/if}}
+    </div>
+</script>
+<script id="number" type="text/html" ndui>
+    <div ndid="{{ndid}}_box" class="form-group {{validatetime>0?(haserror?'has-error':'has-success'):''}}" title="{{title}}" style="width:{{width}}">
+        <div ndid="{{ndid}}_numberbox" style="width:{{width}}" class="input-group">
+            <span class="input-group-addon pointer" ndid="{{ndid}}_minus">
+                <span class="glyphicon glyphicon-minus"></span>
+            </span>
+            <input class="form-control" ndid="{{ndid}}" type="text" value="{{value}}" />
+            <span class="input-group-addon pointer" ndid="{{ndid}}_plus">
+                <span class="glyphicon glyphicon-plus"></span>
+            </span>
+        </div>
+        {{if haserror}}
+        <span class="control-label has-error">{{error}}</span>
+        {{/if}}
+    </div>
+</script>
+<script id="date" type="text/html" ndui>
+    <div ndid="{{ndid}}_box" class="form-group {{validatetime>0?(haserror?'has-error':'has-success'):''}}" title="{{title}}" style="width:{{width}}">
+        <div data-date-format="yyyy-mm-dd" data-link-format="yyyy-mm-dd" ndid="{{ndid}}_datebox" placeholder="{{placeholder}}" style="width:{{width}}" class="input-group date form_date">
+            <input class="form-control" ndid="{{ndid}}" type="text" value="{{value}}" />
+            <span class="input-group-addon pointer">
+                <span class="glyphicon glyphicon-calendar"></span>
+            </span>
+        </div>
+        {{if haserror}}
+        <span class="control-label has-error">{{error}}</span>
+        {{/if}}
+    </div>
+</script>
+<script id="datetime" type="text/html" ndui>
+    <div ndid="{{ndid}}_box" class="form-group {{validatetime>0?(haserror?'has-error':'has-success'):''}}" title="{{title}}" style="width:{{width}}">
+        <div data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" ndid="{{ndid}}_datebox" placeholder="{{placeholder}}" style="width:{{width}}" class="input-group date form_date">
+            <input class="form-control" ndid="{{ndid}}" type="text" value="{{value}}" />
+            <span class="input-group-addon pointer">
+                <span class="glyphicon glyphicon-calendar"></span>
+            </span>
+        </div>
+        {{if haserror}}
+        <span class="control-label has-error">{{error}}</span>
+        {{/if}}
+    </div>
+</script>
+<script type="text/html" id="autocomplete" ndui>
+    <div ndid="{{ndid}}_box" class="form-group {{validatetime>0?(haserror?'has-error':'has-success'):''}}" title="{{title}}" style="width:{{width}}">
+        <input type="hidden" ndid="{{ndid}}" {{cname!=''?('id='+cname+' name='+cname):''}} placeholder="{{placeholder}}" value="{{value}}" />
+        <input class="form-control" type="text" ndid="{{ndid}}_label" value="{{label}}" style="width:{{width}}" />
+        {{if haserror}}
+        <span class="control-label has-error">{{error}}</span>
+        {{/if}}
+    </div>
+</script>
+<script type="text/html" id="upload" ndui>
+    <div ndid="{{ndid}}_box" class="form-group {{validatetime>0?(haserror?'has-error':'has-success'):''}}" title="{{title}}" style="width:{{width}}">
+        <table class="form-control" style="height:190px;width:{{width}}">
+            <tr>
+                <td style="padding-left:10px;overflow:hidden">
+                    <iframe style="height:40px;width:{{width}}" scrolling="no" ndid="{{ndid}}_iframe" frameborder="0" src="" width="{{width}}"></iframe>
+                </td>
+            </tr>
+            <tr ndid="{{ndid}}_imgbox" style="display:none">
+                <td colspan="2" style="text-align:center;padding:9px">
+                    <ul id="{{ndid}}_img">
+                        <li><img height="100" src="../images/file/empty.png" /></li>
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" style="text-align:center">
+                    <a id="{{ndid}}_link" href='#' target="_blank"></a>
+                </td>
+            </tr>
+        </table>
+        {{if haserror}}
+        <span class="control-label has-error">{{error}}</span>
+        {{/if}}
+    </div>
+</script>
+<script type="text/html" id="magicSuggest" ndui>
+    <div ndid="{{ndid}}_box" class="form-group {{validatetime>0?(haserror?'has-error':'has-success'):''}}" title="{{title}}" style="width:{{width}}">
+        <a href="#" onclick="$('.ms-res-ctn dropdown-menu').show()">
+            <div ndid="{{ndid}}" class="form-control" type="text"></div>
+        </a>
+        {{if haserror}}
+        <span class="control-label has-error">{{error}}</span>
+        {{/if}}
+    </div>
+</script>
+<script type="text/html" id="ueditor" ndui>
+    <div ndid="{{ndid}}_box" class="form-group {{validatetime>0?(haserror?'has-error':'has-success'):''}}" title="{{title}}" style="width:{{width}}">
+        <Script ndid="{{ndid}}" id="{{ndid}}_ueditor" type="text/plain" style="width:1000px;height:500px;">
+        </Script>
+    </div>
+</script>
+<script type="text/html" id="treeview" ndui>
+    <span title="{{d.title}}" style="cursor:pointer" class="glyphicon {{(d.data && d.data.length>0)?(!d.opened?'glyphicon-plus':'glyphicon-minus'):'glyphicon-minus')}}"></span>
+    <span title="{{d.title}}" style="cursor:pointer" class="glyphicon {{d.checked ? 'glyphicon-check':'glyphicon-unchecked'}}"></span>
+    <span class="glyphicon"></span>
+    <span title="{{d.title}}">{{d.name}}</span>
+    {{if d.opened}}
+    <ul style="padding-left:0px; list-style: none;">
+        {{each d.data as d i}}
+        <li title="{{d.title}}" class="list-group-item unstyled">
+            {{#d.html()}}
+        </li>
+        {{/each}}
+    </ul>
+    {{/if}}
+</script>
+<script id="rangetime" type="text/html" ndui>
+    <div ndid="{{ndid}}_box" class="form-group {{validatetime>0?(haserror?'has-error':'has-success'):''}}" title="{{title}}" style="width:{{width}}">
+        <div class="input-group">
+            <div data-date-format="yyyy-mm-dd" data-link-format="yyyy-mm-dd" ndid="{{ndid}}_datebox1" style="width:100%" class="input-group date form_date">
+                <span class="input-group-addon pointer" style="width:0px;overflow:hidden;padding:0px;border:none">
+                    <span class="glyphicon glyphicon-calendar" style="width:0px;overflow:hidden"></span>
+                </span>
+                <input class="form-control" ndid="{{ndid}}_start" type="text" value="{{value1}}" />
+            </div>
+            <span class="input-group-addon pointer">
+                <span class="glyphicon glyphicon glyphicon-minus"></span>
+            </span>
+            <div data-date-format="yyyy-mm-dd" data-link-format="yyyy-mm-dd" ndid="{{ndid}}_datebox2" style="width:100%" class="input-group date form_date">
+                <span class="input-group-addon pointer" style="width:0px;overflow:hidden;padding:0px;border:none">
+                    <span class="glyphicon glyphicon-calendar" style="width:0px;overflow:hidden"></span>
+                </span>
+                <input class="form-control" ndid="{{ndid}}_end" type="text" value="{{value2}}" />
+            </div>
+        </div>
+        {{if haserror}}
+        <span class="control-label has-error">{{error}}</span>
+        {{/if}}
+    </div>
+</script>
+<script id="rangenumber" type="text/html" ndui>
+    <div ndid="{{ndid}}_box" class="form-group {{validatetime>0?(haserror?'has-error':'has-success'):''}}" title="{{title}}" style="width:{{width}}">
+        <div class="input-group">
+            <div ndid="{{ndid}}_datebox1">
+                <input class="form-control" ndid="{{ndid}}_start" type="text" value="{{value1}}" />
+            </div>
+            <span class="input-group-addon pointer">
+                <span class="glyphicon glyphicon glyphicon-minus"></span>
+            </span>
+            <div ndid="{{ndid}}_datebox2">
+                <input class="form-control" ndid="{{ndid}}_end" type="text" value="{{value2}}" />
+            </div>
+        </div>
+        {{if haserror}}
+        <span class="control-label has-error">{{error}}</span>
+        {{/if}}
+    </div>
+</script>
+<script id="rangemoney" type="text/html" ndui>
+    <div ndid="{{ndid}}_box" class="form-group {{validatetime>0?(haserror?'has-error':'has-success'):''}}" title="{{title}}" style="width:{{width}}">
+        <div class="input-group">
+            <div ndid="{{ndid}}_datebox1">
+                <input type="hidden" value="{{value1}}" ndid="{{ndid}}_start" />
+                <input {{disabled?'disabled':''}} ndid="{{ndid}}_label1" title="{{title}}" value="{{getmoney1()}}" style="width:{{width}}" class="form-control" type="text" />
+            </div>
+            <span class="input-group-addon pointer">
+                <span class="glyphicon glyphicon glyphicon-minus"></span>
+            </span>
+            <div ndid="{{ndid}}_datebox2">
+                <input type="hidden" value="{{value2}}" ndid="{{ndid}}_end" />
+                <input {{disabled?'disabled':''}} ndid="{{ndid}}_label2" title="{{title}}" value="{{getmoney2()}}" style="width:{{width}}" class="form-control" type="text" />
+            </div>
+        </div>
+        {{if haserror}}
+        <span class="control-label has-error">{{error}}</span>
+        {{/if}}
+    </div>
+</script>
+<script id="tree" type="text/html" ndui>
+    <div class="form-group {{validatetime>0?(haserror?'has-error':'has-success'):''}}" title="{{title}}" style="width:{{width}}">
+        <div style="width:{{width}}">
+            <ul class="list-group treeview unstyled">
+                {{each data as d i}}
+                <li title="{{d.title}}" class="list-group-item unstyled">
+                    {{#d.html()}}
+                </li>
+                {{/each}}
+            </ul>
+        </div>
+        {{if haserror}}
+        <span class="control-label has-error">{{error}}</span>
+        {{/if}}
+    </div>
+</script>
+<script id="panel" type="text/html" ndui>
+    {{if !nopanel}}
+    <div class="col-xs-12 " style="padding-top:5px">
+        <div class="panel panel-info ">
+            <div class="panel-heading">
+                <div class="col-lg-pull-6">
+                    <span class="btn glyphicon glyphicon-collapse-up" id="{{name}}_ph" style="padding-left:5px">&nbsp;收起</span>
+                </div>
+                <div class="col-lg-pull-6">
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="panel-body" id="{{name}}_pb">
+                {{/if}}
+                <div class="form-inline">
+                    <!-- 自动化表单 -->
+                    <table class="table table-bordered" cellSpacing=0 cellPadding=0>
+                        <tbody>
+                            {{each data as row i}}
+                            <tr style="{{(row.lsws.type=='hidden'&&(!row.rsws||row.rsws.type=='hidden'))?'display:none':''}}">
+                                <td class="caption" style="width:15%">
+                                    {{if row.lsws&&row.lsws.type!='hidden'}}
+                                    <span>{{#row.lsws.text}}：</span>
+                                    {{if ('|'+row.lsws.validate+'|').indexOf('|required|')>-1}}
+                                    <span style="color:red">*</span>
+                                    {{/if}}
+                                    {{/if}}
+                                </td>
+                                <td {{#(row.rsws)?'style="width:35%"':'style="width:85%" colspan="3"'}}>
+                                    {{if row.lsws}}
+                                    {{#row.lsws.html()}}
+                                    {{/if}}
+                                </td>
+                                {{if isonerow}}
+                            </tr>
+                            <tr>
+                                {{/if}}
+                                {{if row.rsws}}
+                                <td class="caption" style="width:15%">
+                                    {{if row.rsws.type!='hidden'}}
+                                    <span>{{#row.rsws.text}}：</span>
+                                    {{if ('|'+row.rsws.validate+'|').indexOf('|required|')>-1}}
+                                    <span style="color:red">*</span>
+                                    {{/if}}
+                                    {{/if}}
+                                </td>
+                                <td style="width:35%">
+                                    {{#row.rsws.html()}}
+                                </td>
+                                {{/if}}
+                            </tr>
+                            {{/each}}
+                        </tbody>
+                    </table>
+                    {{if hiddata&&hiddata.length>0}}
+                    <div style="display:none">
+                        {{each hiddata as hid i}}
+                        <div class="form-group" style="width:100%;">
+                            <input {{hid.cname!=''?('id='+hid.cname+' name='+hid.cname):''}} ndid="{{hid.ndid}}" title="{{hid.title}}" value="{{hid.value}}" style="width:100%" class="form-control" type="text" />
+                        </div>
+                        {{/each}}
+                    </div>
+                    {{/if}}
+                </div>
+                {{if !nopanel}}
+            </div>
+        </div>
+    </div>
+    {{/if}}
+</script>
+<script id="ndmodel" type="text/html" ndui>
+    <div class="modal fade " id="{{name}}_Modal" tabindex="-1" role="dialog" aria-labelledby="{{name}}_ModalLabel" aria-hidden="true">
+        <div class="modal-dialog w1000" style="width:{{getwidth()}}px" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 id="{{name}}_ModalLabel" style="padding-left:8px">{{title}}</h4>
+                </div>
+                <div class="modal-body" style="padding:0px;overflow-y:auto;max-height:{{getheight()}}px">
+                    <div id="{{includename}}">
+                        {{if isiframe}}
+                        <iframe frameborder="0" width="100%" id="{{name}}_iframe" height="{{getheight()}}"></iframe>
+                        {{/if}}
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    {{each command as cmd i}}
+                    <a class="btn btn-default" onclick="window.{{name}}.commandClick({{i}})">
+                        <span>{{cmd.cmd}}</span>
+                    </a>
+                    {{/each}}
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+<script id="tableview" type="text/html" ndui>
+    <table class="table table-bordered">
+        {{each data as r i}}
+        <tr>
+            <td class="col-lg-2 text-right caption" style="width:25%">{{r.label}}</td>
+            <td class="col-lg-10" style="word-break:break-all; word-wrap:break-word;width:75%">{{r.text}}</td>
+        </tr>
+        {{/each}}
+    </table>
+</script>
+<script type="text/html" id="ndgridtable" ndui>
+    <div class="table-responsive " style="overflow-x:hidden">
+        <table class="table table-striped  table-bordered">
+            <thead>
+                <tr class="tthide">
+                    {{if showincluded}}
+                    <th style="width:10px;text-align:center;vertical-align:middle;"></th>
+                    {{/if}}
+                    {{if showcheckbox&&multiped}}
+                    <th style="width:16px;text-align:center;vertical-align:middle;">
+                        <input type="checkbox" onclick="window.{{name}}.checkedAll(this)" style="padding:0px;margin:0px" />
+                    </th>
+                    {{/if}}
+                    <th style="width: 16px;">#</th>
+                    {{if commandinleft&&command.length>0}}
+                    <th></th>
+                    {{/if}}
+                    {{each columns as d i}}
+                    {{if d.visble}}
+                    <th {{dosorting?"onclick=window."+name+".sortingClick("+i+")":''}}>
+                        <span>{{d.text}}</span>
+                        {{if dosorting}}
+                        <span class="sorting {{d.sorting}}"></span>
+                        {{/if}}
+                    </th>
+                    {{/if}}
+                    {{/each}}
+                    {{if !commandinleft&&command.length>0}}
+                    <th></th>
+                    {{/if}}
+                </tr>
+            </thead>
+            <tbody style="border:none">
+                {{each rows as r i}}
+                <tr ndid="{{name}}_row_{{i}}" style="cursor:{{rowSelected?'pointer':'default'}};{{r.style}}" onclick="window.{{name}}.rowClick(this,{{i}})">
+                    {{if showincluded}}
+                    <td style="text-align:center;vertical-align:middle">
+                        <span style="cursor:pointer" onclick="window.{{name}}.showincludedbox(this,'{{i}}')" class="glyphicon {{expanded?'glyphicon-triangle-bottom':'glyphicon-triangle-right'}}"></span>
+                    </td>
+                    {{/if}}
+                    {{if showcheckbox}}
+                    <td style="text-align:center;vertical-align:middle">
+                        <input ndname="{{r.checkbox.name}}"  ndid="{{r.checkbox.ndid}}" {{r.checkbox.disabled?'disabled="disabled"':''}} type="checkbox" onclick="window.{{name}}.checkedClick(this,{{i}})"  style="padding:0px;margin:0px;{{r.checkbox.visble==false?'display="none"':''}}" />
+                    </td>
+                    {{/if}}
+                    {{if showrownumber}}
+                    <td>{{r.data.RowNumber}}</td>
+                    {{/if}}
+                    {{if commandinleft&& command.length>0}}
+                    <td>
+                        {{each command as cmd ci}}
+                        {{if cmd.ndif(i)}}
+                        <a class="btn btn-default {{cmd.disabled(i)?'disabled':''}}" {{cmd.disabled(i)?'disabled="disabled"':''}} ndid="{{name}}_command_{{ci}}" title="{{cmd.title}}" style="pointer-events:auto;margin:0 5px 0 0; height:20px;padding: 0px 5px 0px 5px" onclick="window.{{name}}.commandClick({{ci}},{{i}})">
+                            <span>{{cmd.cmd}}</span>
+                        </a>
+                        {{/if}}
+                        {{/each}}
+                    </td>
+                    {{/if}}
+                    {{each columns as c j}}
+                    {{if c.visble}}
+                    <td align="{{c.align}}" title="{{r.data[c.name]}}">
+                        {{#c.bountdata(r.data[c.name])}}
+                        {{if r.data[c.name]&&r.data[c.name].toString().length>c.showlength}}
+                        <a href="#" class="btn-link" onclick="window.{{name}}.showInfo({{i}},{{j}})">
+                            <span class="glyphicon glyphicon-bar" style="font-weight:bold;">...</span>
+                        </a>
+                        {{/if}}
+                    </td>
+                    {{/if}}
+                    {{/each}}
+                    {{if !commandinleft&& command.length>0}}
+                    <td>
+                        {{each command as cmd ci}}
+                        {{if cmd.ndif(i)}}
+                        <a class="btn btn-default {{cmd.disabled(i)?'disabled':''}}" {{cmd.disabled(i)?'disabled="disabled"':''}} ndid="{{name}}_command_{{ci}}" title="{{cmd.title}}" style="pointer-events:auto;margin:0 5px 0 0; height:20px;padding: 0px 5px 0px 5px" onclick="window.{{name}}.commandClick({{ci}},{{i}})">
+                            <span>{{cmd.cmd}}</span>
+                        </a>
+                        {{/if}}
+                        {{/each}}
+                    </td>
+                    {{/if}}
+                </tr>
+                {{if showincluded }}
+                <tr ndid="{{name+'_included_'+i}}" style="{{expanded?'':'display:none'}}">
+                    <td style="padding-left:10px" colspan="{{colspancount}}"></td>
+                </tr>
+                {{/if}}
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+</script>
+<script id="ndgrid_grid" type="text/html" ndui>
+    <div class="panel-heading form-inline">
+        {{if showtoolbar}}
+        <div class="col-lg-pull-6 pull-left" style="padding-top:3px">
+        </div>
+        <div class="col-lg-pull-6 pull-right">
+            {{each toolbar as tb i}}
+            {{if tb.ndif()}}
+            <span class="btn btn-default {{tb.disabled()?'disabled':''}}" {{tb.disabled()?'disabled="disabled"':''}} style="pointer-events:auto;margin-left:5px;" title="{{tb.value}}" onclick='window.{{name}}.toolbarClick({{i}})'>
+                <a class="glyphicon glyphicon-white"></a>
+                <span>{{tb.value}}</span>
+            </span>
+            {{/if}}
+            {{/each}}
+        </div>
+        {{/if}}
+    </div>
+    <div class="panel-body" style="margin:-1px;padding:0px;">
+        <div class="ndgrid">
+            <div class="ndhead noscrollbar" id='{{name}}_top' onscroll="this.scrollTop=0" style="margin-top:-3px">
+                {{#getndgridtable('h')}}
+            </div>
+            <div class="ndbody" id='{{name}}_body'>
+                {{#getndgridtable('b')}}
+            </div>
+        </div>
+    </div>
+    {{if showfooter}}
+    <div class="panel-footer" style="border-top: 1px solid #ededed">
+        <ul class="pagination pagination-sm pull-left">
+            <li style="cursor:pointer" class="{{search.page==0?'disabled':''}}"><a class="a" {{search.page==0?'disabled="disabled"':''}} onclick='window.{{name}}.queryClick(0)'>{{lang.firstpage}}</a></li>
+            <li style="cursor:pointer" class="{{search.page<=0?'disabled':''}}"><a {{search.page<=0?'disabled="disabled"':''}} onclick='window.{{name}}.queryClick({{search.page-pages.length}})'><<</a></li>
+            <li style="cursor:pointer" class="{{search.page<=0?'disabled':''}}"><a {{search.page<=0?'disabled="disabled"':''}} onclick='window.{{name}}.queryClick({{search.page-1}})'><</a></li>
+            {{each pages as p i}}
+            <li style="cursor:pointer" ndid="{{name}}_pagenum" class="{{p.disabled?'disabled':search.page==p.pnumber?'active':''}}"><a {{p.disabled?'disabled="disabled"':''}} onclick='window.{{name}}.queryClick({{p.pnumber}})'>{{p.pnumber+1}}</a></li>
+            {{/each}}
+            <li style="cursor:pointer" class="{{search.pageCount<=(search.page+1)?'disabled':''}}"><a {{search.pageCount<=(search.page+1)?'disabled="disabled"':''}} onclick='window.{{name}}.queryClick({{search.page+1}})'>></a></li>
+            <li style="cursor:pointer" class="{{search.pageCount<=(search.page+1)?'disabled':''}}"><a {{search.pageCount<=(search.page+1)?'disabled="disabled"':''}} onclick='window.{{name}}.queryClick({{search.page+pages.length}})'>>></a></li>
+            <li style="cursor:pointer" class="{{search.page==(search.pageCount-1)?'disabled':''}}"><a {{search.page==(search.pageCount-1)?'disabled="disabled"':''}} onclick='window.{{name}}.queryClick({{search.pageCount-1}})'>{{lang.endpage}}</a></li>
+        </ul>
+        <span class="btn">{{search.pageCount}}{{lang.page}}-{{search.pageItems}}{{lang.article}}</span>
+        <div class="pull-right actions btn-group">
+            <select onchange='window.{{name}}.setpagecount(this)' class="btn btn-default" style="padding: 4px;height:28px">
+                {{each options as op i}}
+                <option {{op.value==search.pageSize?'selected="selected"':''}} value="{{op.value}}">{{op.text}}</option>
+                {{/each}}
+            </select>
+            <div class="btn-group dropup">
+                <input type="button" class="btn btn-default" style="padding:4px;height:28px" value="{{lang.columnsset}}">
+                <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" style="padding:4px;height:28px"><span class="caret"></span></a>
+                <ul id="{{name}}_dropzones_co" class="dropdown-menu dropdown-menu-right" style="max-height:300px;overflow-y:auto">
+                    {{each columns as co i}}
+                    <li class="{{name}}_drop-items_co">
+                        <a href="javascript:void(0)" style="height:25px;padding-top:0px">
+                            <div style="float:left">
+                                <span style="cursor:pointer;margin-top:3px;" onmousedown="window.{{name}}.sortcolumns({{i}},'{{name}}_dropzones_co', '.{{name}}_drop-items_co')" class="glyphicon glyphicon-align-justify"></span>
+                                <input style="margin-bottom:-3px" {{co.enable?'disabled="disabled"':''}} onchange="window.{{name}}.columnsvisbleClick({{i}})" {{co.visble?'checked="checked"':''}} type="checkbox" />
+                                <span>{{co.text}}</span>
+                            </div>
+                        </a>
+                    </li>
+                    {{/each}}
+                </ul>
+            </div>
+        </div>
+    </div>
+    {{/if}}
+</script>
+<script id="ndgrid" type="text/html" ndui>
+    <div class="col-xs-12 " style="padding-top:5px;">
+        {{if showsearch}}
+        <div id="{{name}}_search" class="panel panel-info ">
+            <div class="panel-heading">
+                <div class="col-lg-pull-6 pull-left" style="padding-top:3px">
+                    <a style="cursor:pointer;">
+                        <span class="btn glyphicon glyphicon-collapse-up" id="{{name}}_ph" style="padding-left:5px">&nbsp;收起</span>
+                    </a>
+                </div>
+                <div class="col-lg-pull-6 pull-right">
+                    <span class="btn pointer" onclick='window.{{name}}.showserachEidte()'><a class="glyphicon glyphicon-edit" title="{{lang.conditioneditor}}"></a></span>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="panel-body" id="{{name}}_searchbox">
+                <div class="form-inline">
+                    <div class="form-group" style="float:left;width:auto">
+                        {{each searchdata as sd i}}
+                        {{if sd.type!='hidden'}}
+                        <div ndid="{{name}}_search_{{sd.position}}" style="display:{{sd.position=='more'?'none':'inline-block'}};width:285px;margin:5px 5px 5px 0;">
+                            <div class="form-group search ">
+                                <span class="searchcaption">{{sd.text}}</span>
+                                <div class="searchinfo w180" style="padding:0px">
+                                    {{#sd.html()}}
+                                </div>
+                            </div>
+                        </div>
+                        {{/if}}
+                        {{/each}}
+                    </div>
+                    <div style="display:inline-block;float:left;margin:0px 5px 0px 0;line-height:33px">
+                        <input type="submit" onclick='window.{{name}}.queryClick(0)' class="btn btn-default" value="{{lang.query}}" />
+                        {{if searchhasmore()}}
+                        <input style="margin:5px" name="searchbox" class="btn btn-default btn2 search-btn {{searchbtnvisble?'btn-warning':''}}" type="submit" onclick='window.{{name}}.searchbtnclick(this)' value="{{lang.moreconditions}}">
+                        {{/if}}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{/if}}
+        <div class="panel panel-info" id="{{name}}_grid">
+        </div>
+    </div>
+</script>
+<script id="ndgirdsed" type="text/html" ndui>
+    <table class="table table-bordered" style="margin-bottom: 5px;">
+        <tr>
+            <th style="width: 16px;">#</th>
+            <th>{{lang.controlname}}</th>
+            <th class="w180">{{lang.isoftenuse}}</th>
+        </tr>
+        <tbody id="{{name}}_dropzones1">
+            {{each searchdatadefault as sd i}}
+            {{if sd.type!='hidden'}}
+            <tr class="{{name}}_drop-items1">
+                <td style="width: 16px;">
+                    <span style="cursor:pointer" onmousedown='{{name}}.sortsearchwith({{i}},"{{name}}_dropzones1", ".{{name}}_drop-items1")' class="glyphicon glyphicon-align-justify"></span>
+                </td>
+                <td>{{sd.text}}</td>
+                <td><span class="btn btn-default" onclick="window.{{name}}.searchset({{i}},'default')">{{lang.canceluse}}</span> </td>
+            </tr>
+            {{/if}}
+            {{/each}}
+        </tbody>
+        <tbody id="{{name}}_dropzones2">
+            {{each searchdatamore as sd i}}
+            {{if sd.type!='hidden'}}
+            <tr class="{{name}}_drop-items2">
+                <td style="width: 16px;">
+                    <span style="cursor:pointer" onmousedown='{{name}}.sortsearchwithbox({{i}}, "{{name}}_dropzones2", ".{{name}}_drop-items2")' class="glyphicon glyphicon-align-justify"></span>
+                </td>
+                <td>{{sd.text}}</td>
+                <td><span class="btn btn-default" onclick="window.{{name}}.searchset({{i}},'more')">{{lang.saveuse}}</span></td>
+            </tr>
+            {{/if}}
+            {{/each}}
+        </tbody>
+    </table>
+</script>

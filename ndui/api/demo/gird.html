@@ -1,0 +1,67 @@
+﻿<script>
+    app.set({ title: 'WBS号管理', app: 'BM单' });
+    function WBSEd(t, r) {
+        $nd.ndmodal('WBSEdModel').bind({
+            includename: 'WBSEdForm',
+            title: t == 'new' ? '新增WBS号' : '编辑WBS号',
+            load: function () {
+                $nd.ndform('WBSEdForm').bind({ nopanel: true }).setdata([
+                    { name: 'WBS_ID', type: 'hidden', text: 'WBS_ID', value: t == 'new' ? "" : r.WBS_ID },
+                    { name: 'WBSCode', type: 'input', text: 'WBS编号', value: t == 'new' ? "" : r.WBSCode },
+                    { name: 'ProjectCode', type: 'input', text: '项目编码', value: t == 'new' ? "" : r.ProjectCode },
+                    { name: 'WBSDesc', type: 'input', text: 'WBS描述', value: t == 'new' ? "" : r.WBSDesc },
+                    { name: 'CompanyCode', type: 'input', text: '公司代码', value: t == 'new' ? "" : r.CompanyCode },
+                    { name: 'FactoryCode', type: 'input', text: '工厂代码', value: t == 'new' ? "" : r.FactoryCode },
+                    { name: 'InvestEnvironmentReasonCode', type: 'input', text: '环境投资原因代码', value: t == 'new' ? "" : r.InvestEnvironmentReasonCode },
+                    { name: 'LanguageCode', type: 'input', text: '语言', value: t == 'new' ? "" : r.LanguageCode }
+                ]).print();
+            },
+            command: [{
+                cmd: '确定', ngclick: function () {
+                    var d = FactoryEdForm.getdata();
+                    if (FactoryEdForm.validate) {
+                        if (t == 'new') { MyGrid.Add(d); } else { MyGrid.Update(d); }
+                        this.model().hide();
+                    }
+                }
+            },
+            { cmd: '取消', ngclick: function () { this.model().hide(); } }]
+        }).show();
+    }
+
+    $nd.ndgrid('MyGrid', "dbsqlx/bm?name=BMWBS").bind({
+        columns: [
+            { "name": "WBSCode", "text": "WBS编号", "visble": true },
+            { "name": "ProjectCode", "text": "项目编码", "visble": true },
+            { "name": "WBSDesc", "text": "WBS描述", "visble": true },
+            { "name": "CompanyCode", "text": "公司代码", "visble": true },
+            { "name": "FactoryCode", "text": "工厂代码", "visble": true },
+            { "name": "InvestEnvironmentReasonCode", "text": "环境投资原因代码", "visble": true },
+            { "name": "LanguageCode", "text": "语言", "visble": true }
+        ],
+        expanded: false,
+        showincluded: true,
+        rowincluded: function (a, i) { MyGrid.includehtml(i, '52343225'); },
+        toolbar: [
+            { value: '导出', ngclick: function () { MyGrid.excel("数据.xlsx"); } },
+            { value: '新增', ngclick: function () { WBSEd('new'); } }
+        ],
+        command: [
+            { cmd: '编辑', ngclick: function (r) { WBSEd('edite', r); } },
+            {
+                cmd: '同步R3数据', ngclick: function (r) {
+                    if (confirm('确定要同步R3数据么？')) {
+                        window.loadingbegin();
+                        R3Interface.EBM.BaseInfoHanders.GetWBSData(['<%=DateTime.Now.AddDays(-3).Date.ToString("yyyy-MM-dd")%>', '<%=DateTime.Now.Date.AddDays(1).ToString("yyyy-MM-dd")%>'], function (ref) {
+                            if (ref.success) { alert('同步完成'); MyGrid.refresh(); }
+                            else { alert(ref.message); }
+                            window.loadingend();
+                        });
+                    }
+                }
+            },
+            { cmd: '查看', ngclick: function (r) { MyGrid.showView(r); } },
+            { cmd: '删除', ngclick: function (r) { if (confirm("确定删除么？")) { MyGrid.Delete(r); } } }]
+    }).bindsearch([{ "name": "WBSCode", "type": "input", "text": "WBS编号", "value": "" }],
+    [{ "name": "ProjectCode", "type": "input", "text": "项目编码", "value": "" }]).refresh();
+</script>

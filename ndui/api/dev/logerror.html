@@ -1,0 +1,15 @@
+﻿<script>
+    app.set({ app: '系统管理', title: '异常日志' });
+    $nd.ndgrid('MyGrid', 'dbsqlx/operation?name=log_error').bind({
+        columns: [
+           { "name": "id", "text": "id", "visble": true },
+           { "name": "ErrorMessage", "text": "异常现象", "visble": true },
+           { "name": "logtime", "text": "记录时间", "visble": true }
+        ],
+        toolbar: [{ value: '导出', ngclick: function () { MyGrid.excel("数据.xlsx"); } }],
+        command: [{ cmd: '查看', ngclick: function (r) { MyGrid.showView(r); } }]
+    }).bindsearch([
+        { "name": "TimeSt", "type": "datetime", "text": "请求时间 从", "value": "<%=@nd.day%>", nohisvalue: true },
+        { "name": "TimeEnd", "type": "datetime", "text": "到", "value": "" }
+    ]).refresh();
+</script>

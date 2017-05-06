@@ -1,0 +1,87 @@
+﻿<div class="col-xs-12 " style="margin-top:10px">
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            导出Sql
+        </div>
+        <div class="panel-body">
+            <div class="margin10">
+                <textarea id="sql" class="form-control" style="width:100%" rows="25"></textarea>
+            </div>
+        </div>
+        <div class="panel-footer">
+            <input name="sub" class="btn btn-primary btn2" style="display: inline-block;" type="submit" value="导出" onclick="doexcel()">
+            <input name="sub" class="btn btn-primary btn2" style="left: -57px; top: 33px;" type="submit" value="存档" onclick="saveclick()">
+        </div>
+    </div>
+    <div id='MyGrid'></div>
+    <script>
+        app.set({ title: '导出数据', app: '系统维护' });
+        var sql = '';
+
+        var dbpath = $nd.que('dbpath');
+        var app = $nd.que('app');
+
+        function doexcel(a) {
+            if (confirm('该操作可能会导致数据发生修改，请检查您的语句是否安全，确定继续，否则请取消！！！')) {
+                window.loadingbegin();
+                $nd.dounsafeexcel("dbsqlx/" + dbpath + "?name=ExcelDoTest", [$('#sql').val().replace(/\n/g, " ")], function (r) {
+                    if (r.success) {
+                        window.open("<%=@nd.Site.Url%>/temp/" + r.data + '/报废数据.xlsx');
+                    } else {
+                        alert(r.message);
+                    }
+                    window.loadingend();
+                });
+            }
+        }
+
+        function saveclick() {
+            $nd.ndmodal('ExcelEdModel').bind({
+                includename: 'ExcelEdForm',
+                title: '存档信息',
+                load: function () {
+                    $nd.ndform('ExcelEdForm').bind({ nopanel: true }).setdata([
+                        { name: 'sqlname', type: 'input', text: '存档名称', validate: 'required', value: '' },
+                        { name: 'sqldesc', type: 'input', text: '存档描述', validate: 'required', value: '' },
+                        { name: 'setby', type: 'label', text: '存档人', validate: 'required', value: '<%=@nd.User.UserName%>' }
+                    ], [
+                        { name: 'app', type: 'hidden', text: 'id', value: app },
+                        { name: "sql", type: 'hidden', text: "Sql语句", validate: 'required', value: $('#sql').val() }
+                    ]).print();
+                },
+                command: [{
+                    cmd: '确定', ngclick: function () {
+                        var d = ExcelEdForm.getdata();
+                        if (ExcelEdForm.validate) {
+                            MyGrid.Add(d, function () { this.model().hide(); });
+                        }
+                    }
+                },
+                { cmd: '取消', ngclick: function () { this.model().hide(); } }]
+            }).show();
+        }
+
+        $nd.ndgrid('MyGrid', 'dbsqlx/operation?name=ExcelSql').bind(
+        {
+            autoheight: false,
+            showsearch: false,
+            height: 200 + 'px',
+            columns: [
+                { name: "sqlname", text: "存档名称", visble: true },
+                { name: "sqldesc", text: "存档描述", visble: true },
+                { name: "setdate", text: "存档时间", visble: true },
+                { name: "setby", text: "存档人", visble: true }
+            ],
+            command: [
+                { cmd: '查看', ngclick: function (rc) { $('#sql').text(rc.sql); } },
+                {
+                    cmd: '删除', ngclick: function (r) {
+                        if (confirm('确定要删除么，删除不可恢复')) {
+                            MyGrid.Delete(r);
+                        }
+                    }
+                }
+            ]
+        }).bindsearch([{ name: "app", type: "input", text: "应用", value: app }]).refresh();
+    </script>
+</div>

@@ -1,0 +1,314 @@
+﻿body {
+    /*background-image: url('../theme/1994.jpg');*/
+    background-attachment: fixed;
+}
+
+/*.control-label {
+    float: left;
+}*/
+
+.control {
+    float: right;
+}
+
+    .ndgrid_tabel {
+        position: relative;
+        padding: 0px;
+        margin: 0px;
+    }
+.min-height200 {
+  min-height:200px;
+}
+.rowselect {
+    background-color: #FFE6B0 !important;
+}
+
+.noscrollbar {
+    *position: relative;
+    scrollbar-3dlight-color: transparent;
+    scrollbar-highlight-color: transparent;
+    scrollbar-arrow-color: #fff;
+    scrollbar-base-color: transparent;
+    scrollbar-face-color: transparent;
+}
+
+.bootstrap-datetimepicker-widget {
+    overflow: visible;
+    z-index: 9999999;
+    position: absolute;
+}
+
+th {
+    background: url(Grid/header-columns-bg.png) repeat-x center bottom;
+}
+
+.searchcaption {
+    text-align: right;
+    padding: 3px;
+    text-align: right;
+    width: 100px;
+    float: left;
+}
+
+.sorting {
+    background-image: url(../images/sort_both.png);
+    background-repeat: no-repeat;
+    background-position: right center;
+}
+
+.sorting_desc {
+    background-image: url(../images/sort_desc.png);
+    background-repeat: no-repeat;
+    background-position: right center;
+}
+
+.sorting_asc {
+    background-image: url(../images/sort_asc.png);
+    background-repeat: no-repeat;
+    background-position: right center;
+}
+
+
+.pagination {
+    margin: 0px;
+}
+
+.panel-footer {
+    min-height: 40px;
+}
+
+.panel-heading {
+    min-height: 28px;
+}
+
+.ui-autocomplete {
+    z-index: 9999999;
+}
+
+.ndgrid {
+    overflow-x: auto;
+    border-right: 1px solid #1daafa;
+    border-left: 1px solid #1daafa;
+    background: url(Grid/header-columns-bg.png) repeat-x center bottom;
+}
+
+    .ndgrid > div > table {
+        overflow-x: auto;
+        border: none !important;
+    }
+
+    .ndgrid th {
+        text-align: center;
+    }
+
+
+    .ndgrid .ndhead {
+        overflow-y: scroll;
+        overflow-x: hidden;
+        display: inline-block;
+        min-width: 100%;
+        height: 28px !important;
+        background: url(Grid/header-columns-bg.png) repeat-x center bottom;
+    }
+
+    .ndgrid .ndbody {
+        overflow-y: scroll;
+        height: 340px;
+        display: inline-block;
+        white-space: nowrap;
+        min-width: 100%;
+        overflow-x: hidden;
+        margin-top: -5px;
+    }
+
+        .ndgrid .ndbody .table-responsive {
+            overflow-y: hidden;
+        }
+
+.cmd {
+    padding: 0px !important;
+    border-right: none !important;
+}
+
+.ndgrid .ndhead > div > table {
+    white-space: nowrap;
+    border-right: none !important;
+}
+
+.ndgrid .sorting {
+    padding-right: 15px;
+}
+
+.ndgrid .sorting_desc {
+    padding-right: 15px;
+}
+
+.ndgrid .sorting_asc {
+    padding-right: 15px;
+}
+
+.ndgrid .ndbody > div > table {
+    white-space: nowrap;
+    margin-top: -30px;
+    margin-bottom: 0px;
+    border-right: none;
+}
+
+::-webkit-scrollbar {
+    width: 14px;
+}
+
+.treeview span.indent {
+    margin-left: 8px;
+    margin-right: 8px;
+}
+
+.list-group-item {
+    padding: 0px 15px;
+}
+
+.alignmiddle {
+    vertical-align: middle !important;
+}
+
+.aligntop {
+    vertical-align: top !important;
+}
+
+.alignbottom {
+    vertical-align: bottom !important;
+}
+
+.exampleInputName2 {
+    display: inline;
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+.caption {
+    background: #F1F6FF;
+    background-color: rgba(241,246,255,.7);
+    /*filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#b2F1F6FF,endColorstr=#b2F1F6FF);*/
+    text-align: right;
+    margin: 3px 0 3px 0;
+    padding-right: 5px;
+    width: 100px;
+}
+
+/*.form-group .caption {
+    background: none;
+    width: 40% !important;
+    float: left;
+}*/
+
+.w180 {
+    width: 150px !important;
+}
+
+.search {
+    width: 100% !important;
+}
+
+.searchinfo {
+    width: 60% !important;
+    float: right;
+}
+
+    .searchinfo div {
+        width: 100%;
+    }
+
+        .searchinfo div .form-control {
+            width: 100%;
+        }
+
+.modal {
+    background: rgba(0,0,0,.5); /*支持rgba的浏览器*/
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#7f000000,endColorstr=#7f000000);
+}
+
+.table {
+    margin-bottom: 0px;
+}
+
+.ndslider .ui-slider-range {
+    background: #729fcf;
+}
+
+body {
+    margin: 0;
+    font-family: "宋体", "Arial";
+}
+
+.navbar .brand {
+    font-size: 20px;
+    font-weight: 200;
+    color: #777777;
+}
+
+/*@media all and (min-width:768px)*/
+.modal-dialog {
+    width: 600px;
+    margin-top: 5%;
+    margin-bottom: -260px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
+.sidebar-nav .nav-header {
+    /*border-top: 1px solid #e7e7e7;*/
+    border-bottom: 1px solid #e7e7e7;
+    border-left: none;
+    color: #333;
+    display: block;
+    background-color: rgba(176,223,240,.7);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#b2efeff0,endColorstr=#b2efeff0);
+    background: -webkit-gradient(linear, left bottom, left top, color-stop(0, #efeff0), color-stop(1, #ffffff));
+    background: -moz-linear-gradient(center bottom, #efeff0 0%, #ffffff 100%);
+    background: -o-linear-gradient(bottom, #efeff0, #ffffff);
+    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr='#ffffff',EndColorStr='#efeff0')";
+    font-weight: normal;
+    font-size: 1em;
+    line-height: 2.5em;
+    padding: 0em .25em;
+    margin-bottom: 0px;
+    text-shadow: none;
+    padding-left: 1em;
+    text-transform: none;
+}
+
+.navbar-right {
+    font-size: 16px;
+}
+
+.sidebar-nav .nav-list {
+    margin: 0px;
+    border: 0px;
+    border-bottom: 1px solid #e7e7e7;
+    background-color: rgba(176,223,240,.7);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#b2f6f6f6,endColorstr=#b2f6f6f6);
+}
+
+.navbar-default {
+    background-color: rgba(176,223,240,.9);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#b2b0dff0,endColorstr=#b2b0dff0);
+}
+
+.navbar-brand {
+    float: left;
+    padding: 16.5px 15px;
+    font-size: 25px;
+    line-height: 17px;
+    height: 50px;
+}
+
+.navbar-brand {
+    font-family: georgia, serif;
+}
+
+.w50 {
+    width: 50px !important;
+}
