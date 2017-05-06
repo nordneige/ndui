@@ -1,0 +1,8 @@
+F:\MSProject\Code\git\NduiApi\bin\Debug\NduiApi.dll
+F:\MSProject\Code\git\NduiApi\bin\Debug\NduiApi.pdb
+F:\MSProject\Code\git\NduiApi\bin\Debug\NordNeige.dll
+F:\MSProject\Code\git\NduiApi\obj\Debug\NduiApi.Web.Properties.Resources.resources
+F:\MSProject\Code\git\NduiApi\obj\Debug\NduiApi.csproj.GenerateResource.Cache
+F:\MSProject\Code\git\NduiApi\obj\Debug\NduiApi.dll
+F:\MSProject\Code\git\NduiApi\obj\Debug\NduiApi.pdb
+F:\MSProject\Code\git\NduiApi\obj\Debug\NduiApi.csprojResolveAssemblyReference.cache
