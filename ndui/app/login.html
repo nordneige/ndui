@@ -10,6 +10,14 @@
 
     <script language="javascript">
         $(function () {
+            if (top.location != location) {
+                top.location.href = location.href;
+            }
+
+            //if (window.parent) {
+            //    window.parent.location=window.location.pathname;
+            //}
+
             $('.loginbox').css({ 'position': 'absolute', 'left': ($(window).width() - 692) / 2 });
             $(window).resize(function () {
                 $('.loginbox').css({ 'position': 'absolute', 'left': ($(window).width() - 692) / 2 });
